@@ -1,0 +1,11 @@
+# This file is managed by Copier; DO NOT EDIT OR REMOVE.
+_commit: v0.1.0
+_src_path: https://github.com/quantco/copier-template-python-open-source
+add_autobump_workflow: true
+github_url: https://github.com/quantco/sqlcompyre
+github_user: borchero
+minimal_python_version: py311
+project_name: SQLCompyre
+project_short_description: Tool for comparing and inspecting data in SQL databases.
+project_slug: sqlcompyre
+use_devcontainer: false

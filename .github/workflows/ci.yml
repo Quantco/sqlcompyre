@@ -1,0 +1,83 @@
+name: CI
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+# Automatically stop old builds on the same branch/PR
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
+defaults:
+  run:
+    shell: bash -el {0}
+
+jobs:
+  pre-commit:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+      - name: Set up pixi
+        uses: prefix-dev/setup-pixi@ba3bb36eb2066252b2363392b7739741bb777659
+        with:
+          environments: default lint
+      - name: pre-commit
+        run: pixi run pre-commit-run --color=always --show-diff-on-failure
+
+  linux-mssql:
+    name: Unit Tests - MSSQL ${{ matrix.mssql-version }} - Environment ${{ matrix.environment }}
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    services:
+      mssql:
+        image: mcr.microsoft.com/mssql/server:2022-latest
+        env:
+          ACCEPT_EULA: Y
+          SA_PASSWORD: Passw0rd
+        ports:
+          - 1433:1433
+    strategy:
+      fail-fast: false
+      matrix:
+        mssql-version: [2017, 2019, 2022]
+        environment: [py311, py312]
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+      - name: Install msodbcsql18
+        run: sudo ACCEPT_EULA=Y apt-get install msodbcsql18 -y
+      - name: Run tests
+        uses: ./.github/actions/pytest
+        with:
+          database: MSSQL
+          github-token: ${{ secrets.FQ_GH_TOKEN }}
+          codecov-token: ${{ secrets.CODECOV_TOKEN }}
+          environment: ${{ matrix.environment }}
+        env:
+          DB_CONNECTION_STRING: mssql+pyodbc://sa:Passw0rd@localhost:1433/master?driver=ODBC+Driver+18+for+SQL+Server&Encrypt=no
+
+  linux-sqlite:
+    name: Unit Tests - SQLite - Environment ${{ matrix.environment }}
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        environment: ["py311", "py312"]
+    steps:
+      - name: Checkout branch
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Run tests
+        uses: ./.github/actions/pytest
+        with:
+          database: SQLite
+          github-token: ${{ secrets.FQ_GH_TOKEN }}
+          codecov-token: ${{ secrets.CODECOV_TOKEN }}
+          environment: ${{ matrix.environment }}
+        env:
+          DB_CONNECTION_STRING: sqlite:///test.sqlite3

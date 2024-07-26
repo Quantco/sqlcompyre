@@ -1,0 +1,5 @@
+ignore_tables:
+  - table1
+ignore_table_columns:
+  table2:
+    - value

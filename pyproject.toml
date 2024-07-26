@@ -1,0 +1,91 @@
+[build-system]
+requires = ["setuptools", "setuptools-scm", "wheel"]
+
+[tool.setuptools_scm]
+version_scheme = "post-release"
+
+[project]
+authors = [{ name = "QuantCo, Inc.", email = "noreply@quantco.com" }]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+]
+dependencies = [
+  "click",
+  "pydantic>=2,<3",
+  "pyyaml",
+  "sqlalchemy>=2,<3",
+  "tabulate",
+  "tqdm",
+]
+description = "Tool for comparing and inspecting data in SQL databases."
+dynamic = ["version"]
+name = "sqlcompyre"
+requires-python = ">=3.11"
+
+[project.urls]
+repository = "https://github.com/quantco/sqlcompyre"
+
+[tool.setuptools.packages.find]
+include = ["sqlcompyre"]
+namespaces = false
+
+[project.scripts]
+compyre = "sqlcompyre.cli.__main__:main"
+
+[tool.docformatter]
+black = true
+
+[tool.black]
+exclude = '''
+/(
+    \.eggs
+  | \.git
+  | \.venv
+  | build
+  | dist
+)/
+'''
+
+[tool.ruff]
+line-length = 88
+
+[tool.ruff.lint]
+ignore = [
+  "E501", # https://docs.astral.sh/ruff/faq/#is-the-ruff-linter-compatible-with-black
+  "N803", # https://docs.astral.sh/ruff/rules/invalid-argument-name
+  "N806", # https://docs.astral.sh/ruff/rules/non-lowercase-variable-in-function
+]
+select = [
+  # pyflakes
+  "F",
+  # pycodestyle
+  "E",
+  "W",
+  # isort
+  "I",
+  # pep8-naming
+  "N",
+  # pyupgrade
+  "UP",
+]
+
+[tool.mypy]
+check_untyped_defs = true
+exclude = ["docs/"]
+ignore_missing_imports = true
+no_implicit_optional = true
+python_version = '3.11'
+
+# If you run into `missing library stubs or py.typed marker` errors
+# and no stubs are available for this library, you can add an override
+# to ignore the missing imports.
+# [[tool.mypy.overrides]]
+# module = ["my_module"]
+# ignore_missing_imports = true
+
+[tool.pytest.ini_options]
+addopts = "--import-mode=importlib --cov=sqlcompyre --cov-report term-missing --color=yes"
+markers = ["skip_dialect(dialect): skip this test for a certain dialect"]
+testpaths = ["tests"]

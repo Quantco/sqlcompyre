@@ -1,0 +1,5 @@
+build
+.copier-answers.yml
+
+*.html
+*.properties

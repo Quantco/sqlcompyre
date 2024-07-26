@@ -1,0 +1,9 @@
+services:
+  mssql:
+    image: mcr.microsoft.com/azure-sql-edge:latest
+    environment:
+      ACCEPT_EULA: Y
+      MSSQL_USER: sa
+      SA_PASSWORD: Passw0rd
+    ports:
+      - "1435:1433"

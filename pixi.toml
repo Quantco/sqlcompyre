@@ -1,0 +1,85 @@
+[project]
+channels = ["conda-forge"]
+name = "sqlcompyre"
+platforms = ["linux-64", "osx-64", "osx-arm64"]
+
+[tasks]
+postinstall = "pip install --no-build-isolation --no-deps --disable-pip-version-check -e ."
+
+[dependencies]
+python = ">=3.11"
+# Dependencies
+click = "*"
+pydantic = ">=2.0"
+pyyaml = "*"
+sqlalchemy = ">=2"
+tabulate = "*"
+tqdm = "*"
+types-pyyaml = "*"
+types-tabulate = "*"
+# Database Dependencies: MSSQL
+unixodbc = "*"
+# Database Dependencies: DuckDB
+duckdb-engine = "*"
+python-duckdb = "*"
+
+[host-dependencies]
+pip = "*"
+setuptools = ">=61"
+setuptools-scm = "*"
+types-setuptools = "*"
+
+[feature.docs.dependencies]
+make = "*"
+numpydoc = "*"
+sphinx = "*"
+sphinx_rtd_theme = "*"
+sphinxcontrib-apidoc = "*"
+[feature.docs.tasks]
+docs = "cd docs && make html"
+
+[feature.test.dependencies]
+mypy = "*"
+pandas = "*"
+polars = "*"
+pyodbc = "*"
+pytest = ">=6,<8"            # Adds --import-mode option
+pytest-console-scripts = "*"
+pytest-cov = "*"
+pytest-lazy-fixture = "*"
+python-dotenv = "*"
+sqlalchemy-utils = "*"
+[feature.test.tasks]
+test = "python -m pytest"
+test-coverage = "python -m pytest --cov=sqlcompyre --cov-report=xml --cov-report=term-missing"
+
+[feature.build.dependencies]
+build = "*"
+[feature.build.tasks]
+build-wheel = "python -m build --no-isolation ."
+
+[feature.lint.dependencies]
+docformatter = "*"
+insert-license-header = "*"
+pre-commit = "*"
+pre-commit-hooks = "*"
+prettier = "*"
+ruff = "*"
+taplo = "*"
+typos = "*"
+[feature.lint.tasks]
+pre-commit-install = "pre-commit install"
+pre-commit-run = "pre-commit run -a"
+
+[feature.py311.dependencies]
+python = "3.11.*"
+[feature.py312.dependencies]
+python = "3.12.*"
+
+[environments]
+build = ["build"]
+default = ["test"]
+docs = ["docs"]
+lint = { features = ["lint"], no-default-feature = true }
+py311 = ["py311", "test"]
+py312 = ["py312", "test"]
