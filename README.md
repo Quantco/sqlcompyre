@@ -6,8 +6,26 @@
 [![pypi-version](https://img.shields.io/pypi/v/sqlcompyre.svg?logo=pypi&logoColor=white&style=flat-square)](https://pypi.org/project/sqlcompyre)
 [![python-version](https://img.shields.io/pypi/pyversions/sqlcompyre?logoColor=white&logo=python&style=flat-square)](https://pypi.org/project/sqlcompyre)
 
-SQLCompyre is a simple Python package that allows you to find and explore the differences between
-SQL tables, schemas, and entire databases.
+SQLCompyre is a simple Python package that allows you to find and explore the differences between SQL tables, schemas, and entire databases. It provides both a Python interface and a CLI, allowing it to be used for both ad-hoc comparisons as well as in-depth analyses.
+
+SQLCompyre is designed to be dialect-agnostic and should, thus, work with most database systems out-of-the-box.
+
+## Usage example
+
+Given a connection to a database, this snippet will print a report of the differences between two tables:
+
+```python
+import sqlalchemy as sa
+import sqlcompyre as sc
+
+engine = sa.create_engine("<your_connection_string>")
+comparison = sc.compare_tables(engine, "<left table name>", "<right table name>")
+
+report = comparison.summary_report()
+print(report)
+```
+
+To find more examples and get started, please visit the [documentation](https://sqlcompyre.readthedocs.io/en/latest/).
 
 ## Installation
 
