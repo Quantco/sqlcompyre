@@ -5,7 +5,10 @@ requires = ["setuptools", "setuptools-scm", "wheel"]
 version_scheme = "post-release"
 
 [project]
-authors = [{ name = "QuantCo, Inc.", email = "noreply@quantco.com" }]
+name = "sqlcompyre"
+description = "Tool for comparing and inspecting data in SQL databases."
+authors = [{ name = "Oliver Borchert", email = "oliver.borchert@quantco.com" }]
+dynamic = ["version"]
 classifiers = [
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.11",
@@ -19,9 +22,6 @@ dependencies = [
   "tabulate",
   "tqdm",
 ]
-description = "Tool for comparing and inspecting data in SQL databases."
-dynamic = ["version"]
-name = "sqlcompyre"
 readme = "README.md"
 requires-python = ">=3.11"
 
