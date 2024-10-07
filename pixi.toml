@@ -55,11 +55,11 @@ test = "python -m pytest"
 test-coverage = "python -m pytest --cov=sqlcompyre --cov-report=xml --cov-report=term-missing"
 
 [feature.build.dependencies]
-build = "*"
+python-build = "*"
 twine = "*"
 [feature.build.tasks]
 build-wheel = "python -m build --no-isolation ."
-twine-check = "twine check dist/*"
+check-wheel = "twine check dist/*"
 
 [feature.lint.dependencies]
 docformatter = "*"
