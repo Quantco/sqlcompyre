@@ -11,14 +11,14 @@ class Names:
         self,
         left: set[str],
         right: set[str],
-        column_name_mapping: dict[str, str] | None,
+        name_mapping: dict[str, str] | None,
         ignore_casing: bool,
     ):
         """
         Args:
             left: Names from the "left" database object.
             right: Names from the "right" database object.
-            column_name_mapping: Mapping of column names from the "left" to the "right" database object.
+            name_mapping: Mapping from the "left" to the "right" database object.
             ignore_casing: Whether to ignore casing for name equality.
         """
         if ignore_casing:
@@ -27,7 +27,10 @@ class Names:
         else:
             self._set_left = left
             self._set_right = right
-        self.column_name_mapping = column_name_mapping
+        self.name_mapping = name_mapping
+        self.inverse_name_mapping = (
+            {v: k for k, v in name_mapping.items()} if name_mapping else {}
+        )
 
     @cached_property
     def left(self) -> list[str]:
@@ -47,20 +50,22 @@ class Names:
     @cached_property
     def missing_left(self) -> list[str]:
         """Ordered list of names provided only by the "right" database object."""
-        renamed_keys = (
-            set(self.column_name_mapping.values())
-            if self.column_name_mapping
-            else set()
-        )
-        return sorted(self._set_right - self._set_left - renamed_keys)
+        if self.name_mapping:
+            right_renamed = {
+                self.inverse_name_mapping.get(k, k) for k in self._set_right
+            }
+        else:
+            right_renamed = self._set_right
+        return sorted(right_renamed - self._set_left)
 
     @cached_property
     def missing_right(self) -> list[str]:
         """Ordered list of names provided only by the "left" database object."""
-        renamed_keys = (
-            set(self.column_name_mapping.keys()) if self.column_name_mapping else set()
-        )
-        return sorted(self._set_left - self._set_right - renamed_keys)
+        if self.name_mapping:
+            left_renamed = {self.name_mapping.get(k, k) for k in self._set_left}
+        else:
+            left_renamed = self._set_left
+        return sorted(self._set_left - left_renamed)
 
     @cached_property
     def equal(self) -> bool:
