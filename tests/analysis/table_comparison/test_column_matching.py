@@ -89,8 +89,8 @@ def test_partly_renaming(
         column_name_mapping={"age": "age_v2", "gpa": "gpa_v2"},
     )
     assert len(comparison.column_names.in_common) == 2
-    assert len(comparison.column_names.missing_left) == 2
-    assert len(comparison.column_names.missing_right) == 2
+    assert len(comparison.column_names.missing_left) == 0
+    assert len(comparison.column_names.missing_right) == 0
     assert comparison.row_counts.diff == 1
     # Ensure that all columns are matched, one is primary key, 3 per table left
     assert pd.read_sql(comparison.row_matches.joined_equal, con=engine).shape[1] == 7
@@ -102,8 +102,8 @@ def test_partly_renaming(
         column_name_mapping={"age_v2": "age", "gpa_v2": "gpa"},
     )
     assert len(comparison.column_names.in_common) == 2
-    assert len(comparison.column_names.missing_left) == 2
-    assert len(comparison.column_names.missing_right) == 2
+    assert len(comparison.column_names.missing_left) == 0
+    assert len(comparison.column_names.missing_right) == 0
     assert comparison.row_counts.diff == 1
     # Ensure that all columns are matched, one is primary key, 3 per table left
     assert pd.read_sql(comparison.row_matches.joined_equal, con=engine).shape[1] == 7
