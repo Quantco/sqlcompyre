@@ -48,7 +48,9 @@ class Names:
     def missing_left(self) -> list[str]:
         """Ordered list of names provided only by the "right" database object."""
         renamed_keys = (
-            set(self.column_name_mapping.keys()) if self.column_name_mapping else set()
+            set(self.column_name_mapping.values())
+            if self.column_name_mapping
+            else set()
         )
         return sorted(self._set_right - self._set_left - renamed_keys)
 
@@ -56,9 +58,7 @@ class Names:
     def missing_right(self) -> list[str]:
         """Ordered list of names provided only by the "left" database object."""
         renamed_keys = (
-            set(self.column_name_mapping.values())
-            if self.column_name_mapping
-            else set()
+            set(self.column_name_mapping.keys()) if self.column_name_mapping else set()
         )
         return sorted(self._set_left - self._set_right - renamed_keys)
 
