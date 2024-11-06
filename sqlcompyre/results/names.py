@@ -7,11 +7,18 @@ from functools import cached_property
 class Names:
     """Investigate the names of database objects."""
 
-    def __init__(self, left: set[str], right: set[str], ignore_casing: bool):
+    def __init__(
+        self,
+        left: set[str],
+        right: set[str],
+        column_name_mapping: dict[str, str] | None,
+        ignore_casing: bool,
+    ):
         """
         Args:
             left: Names from the "left" database object.
             right: Names from the "right" database object.
+            column_name_mapping: Mapping of column names from the "left" to the "right" database object.
             ignore_casing: Whether to ignore casing for name equality.
         """
         if ignore_casing:
@@ -20,6 +27,7 @@ class Names:
         else:
             self._set_left = left
             self._set_right = right
+        self.column_name_mapping = column_name_mapping
 
     @cached_property
     def left(self) -> list[str]:
@@ -39,12 +47,20 @@ class Names:
     @cached_property
     def missing_left(self) -> list[str]:
         """Ordered list of names provided only by the "right" database object."""
-        return sorted(self._set_right - self._set_left)
+        renamed_keys = (
+            set(self.column_name_mapping.keys()) if self.column_name_mapping else set()
+        )
+        return sorted(self._set_right - self._set_left - renamed_keys)
 
     @cached_property
     def missing_right(self) -> list[str]:
         """Ordered list of names provided only by the "left" database object."""
-        return sorted(self._set_left - self._set_right)
+        renamed_keys = (
+            set(self.column_name_mapping.values())
+            if self.column_name_mapping
+            else set()
+        )
+        return sorted(self._set_left - self._set_right - renamed_keys)
 
     @cached_property
     def equal(self) -> bool:
