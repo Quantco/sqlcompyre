@@ -27,8 +27,8 @@ class Names:
         else:
             self._set_left = left
             self._set_right = right
-        self.name_mapping = name_mapping
-        self.inverse_name_mapping = (
+        self._name_mapping = name_mapping
+        self._inverse_name_mapping = (
             {v: k for k, v in name_mapping.items()} if name_mapping else {}
         )
 
@@ -50,22 +50,22 @@ class Names:
     @cached_property
     def missing_left(self) -> list[str]:
         """Ordered list of names provided only by the "right" database object."""
-        if self.name_mapping:
+        if self._name_mapping:
             right_renamed = {
-                self.inverse_name_mapping.get(k, k) for k in self._set_right
+                self._inverse_name_mapping.get(k, k) for k in self._set_right
             }
+            return sorted(right_renamed - self._set_left)
         else:
-            right_renamed = self._set_right
-        return sorted(right_renamed - self._set_left)
+            return sorted(self._set_right - self._set_left)
 
     @cached_property
     def missing_right(self) -> list[str]:
         """Ordered list of names provided only by the "left" database object."""
-        if self.name_mapping:
-            left_renamed = {self.name_mapping.get(k, k) for k in self._set_left}
+        if self._name_mapping:
+            left_renamed = {self._name_mapping.get(k, k) for k in self._set_left}
+            return sorted(left_renamed - self._set_right)
         else:
-            left_renamed = self._set_left
-        return sorted(left_renamed - self._set_right)
+            return sorted(self._set_left - self._set_right)
 
     @cached_property
     def equal(self) -> bool:
