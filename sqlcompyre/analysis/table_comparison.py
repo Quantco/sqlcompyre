@@ -252,12 +252,13 @@ class TableComparison:
     @cached_property
     def column_matches(self) -> ColumnMatches:
         """A comparison between the column values of the two tables."""
+        MATCH_SUFFIX = "_zzz_match"
         inner_join = self._inner_join()
 
         # Query for testing equality of column values in matching rows
         cases = [
             sa.case((self._is_equal(left_column, right_column), 1.0), else_=0.0).label(
-                f"{left_column}_match"
+                f"{left_column}_{MATCH_SUFFIX}"
             )
             for left_column, right_column in self.column_name_mapping.items()
             if left_column not in self.join_columns
@@ -268,10 +269,10 @@ class TableComparison:
         case_stmt = select(*cases).select_from(inner_join).subquery()
 
         # Compute fraction of matching values
-        cols_to_avg = [col for col in case_stmt.c if "_match" in col.name]
+        cols_to_avg = [col for col in case_stmt.c if f"_{MATCH_SUFFIX}" in col.name]
         avgs = select(
             *[
-                sa.func.avg(col).label(f"{col.name.replace('_match', '')}")
+                sa.func.avg(col).label(f"{col.name.replace(f'_{MATCH_SUFFIX}', '')}")
                 for col in cols_to_avg
             ]
         )
