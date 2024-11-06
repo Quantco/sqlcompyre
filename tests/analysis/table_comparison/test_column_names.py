@@ -28,6 +28,46 @@ def test_column_names_equal_missing_2(engine: Engine, table_students: sa.Table):
     assert not comparison.column_names.missing_right
 
 
+def test_column_names_equal_missing_renamed_1(
+    engine: Engine,
+    table_students_modified_2: sa.Table,
+    table_students_renamed: sa.Table,
+):
+    # Check that there are no missing columns in two different tables with renamings
+    comparison = sc.compare_tables(
+        engine,
+        table_students_modified_2,
+        table_students_renamed,
+        column_name_mapping={
+            "id": "id_v2",
+            "name": "name_v2",
+            "age": "age_v2",
+            "gpa": "gpa_v2",
+        },
+    )
+    assert not comparison.column_names.missing_left
+
+
+def test_column_names_equal_missing_renamed_2(
+    engine: Engine,
+    table_students_modified_2: sa.Table,
+    table_students_renamed: sa.Table,
+):
+    # Check that there are no missing columns in two different tables with renamings
+    comparison = sc.compare_tables(
+        engine,
+        table_students_modified_2,
+        table_students_renamed,
+        column_name_mapping={
+            "id": "id_v2",
+            "name": "name_v2",
+            "age": "age_v2",
+            "gpa": "gpa_v2",
+        },
+    )
+    assert not comparison.column_names.missing_right
+
+
 def test_column_names_unequal_same_names(
     engine: Engine,
     table_students: sa.Table,
