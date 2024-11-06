@@ -65,7 +65,7 @@ class Names:
             left_renamed = {self.name_mapping.get(k, k) for k in self._set_left}
         else:
             left_renamed = self._set_left
-        return sorted(self._set_left - left_renamed)
+        return sorted(left_renamed - self._set_right)
 
     @cached_property
     def equal(self) -> bool:
