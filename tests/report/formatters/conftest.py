@@ -20,7 +20,10 @@ def metadata_description() -> Metadata:
 @pytest.fixture()
 def names() -> Names:
     return Names(
-        left={"hello", "world"}, right={"hello", "hi", "there"}, ignore_casing=False
+        left={"hello", "world"},
+        right={"hello", "hi", "there"},
+        column_name_mapping=None,
+        ignore_casing=False,
     )
 
 
