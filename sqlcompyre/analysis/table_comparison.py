@@ -252,7 +252,7 @@ class TableComparison:
     @cached_property
     def column_matches(self) -> ColumnMatches:
         """A comparison between the column values of the two tables."""
-        MATCH_SUFFIX = "_match"
+        MATCH_SUFFIX = "_zzz_match"
         inner_join = self._inner_join()
 
         # Query for testing equality of column values in matching rows
