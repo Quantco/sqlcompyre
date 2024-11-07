@@ -77,6 +77,7 @@ class SchemaComparison:
         return Names(
             left=set(self.left_tables.keys()),
             right=set(self.right_tables.keys()),
+            name_mapping=None,
             ignore_casing=self.ignore_casing,
         )
 

@@ -156,6 +156,7 @@ class TableComparison:
         return Names(
             left={col.name for col in self.left_table.columns},
             right={col.name for col in self.right_table.columns},
+            name_mapping=self.column_name_mapping,
             ignore_casing=self.ignore_casing,
         )
 
