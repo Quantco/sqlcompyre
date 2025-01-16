@@ -28,22 +28,6 @@ def test_row_count_query(engine: sa.Engine, table_characters: sa.Table):
     assert inspection.row_count == 6
 
 
-def test_row_count_raw_query(engine: sa.Engine, table_characters: sa.Table):
-    inspection = sc.inspect(
-        engine,
-        f"""
-        SELECT characters.first_name, characters.last_name, characters.age
-        FROM {str(table_characters)}
-        WHERE characters.last_name = 'Duck'
-        """,
-    )
-
-    assert inspection.row_count == 6
-    assert inspection.distinct_row_count() == 5
-    assert inspection.distinct_row_count("last_name") == 1
-    assert inspection.distinct_row_count("last_name", "age") == 3
-
-
 @pytest.mark.parametrize(
     ("columns", "expected"),
     [([], 7), (["last_name"], 3), (["last_name", "age"], 5)],

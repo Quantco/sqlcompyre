@@ -12,16 +12,14 @@ from .analysis import QueryInspection, SchemaComparison, TableComparison
 # ---------------------------------------------------------------------------------------------
 
 
-def inspect(
-    engine: sa.Engine, query: sa.Select | sa.FromClause | str
-) -> QueryInspection:
+def inspect(engine: sa.Engine, query: sa.Select | sa.FromClause) -> QueryInspection:
     """Inspect the results of a query in the database.
 
     Args:
         engine: The engine to use to access the database.
         query: The query whose results to inspect. This can either be a SQLAlchemy ``SELECT``
-            statement, a ``FROM`` clause (which includes plain :class:`sqlalchemy.Table` objects),
-            or a SQL query specified as string.
+            statement or a ``FROM`` clause (which includes plain :class:`sqlalchemy.Table`
+            objects).
 
     Returns:
         A query inspection object that can be used to easily gain insights into the query
@@ -31,10 +29,8 @@ def inspect(
         :meth:`inspect_table` if you want to inspect the results of ``SELECT * FROM table`` and
         specify the table as a string.
     """
-    if isinstance(query, str):
-        query = sa.select("*").select_from(sa.text(f"({query}) as anon_1"))
-    elif isinstance(query, sa.FromClause):
-        query = sa.select(query)
+    if isinstance(query, sa.Select):
+        return QueryInspection(engine, query.subquery())
     return QueryInspection(engine, query)
 
 
@@ -63,7 +59,7 @@ def inspect_table(engine: sa.Engine, table: sa.Table | str) -> QueryInspection:
         sa_table = meta.tables[table]
     else:
         sa_table = table
-    return inspect(engine, sa.select(sa_table))
+    return inspect(engine, sa_table)
 
 
 # ---------------------------------------------------------------------------------------------
