@@ -57,6 +57,7 @@ test-coverage = "python -m pytest --cov=sqlcompyre --cov-report=xml --cov-report
 [feature.build.dependencies]
 python-build = "*"
 twine = "*"
+wheel = "*"
 [feature.build.tasks]
 build-wheel = "python -m build --no-isolation ."
 check-wheel = "twine check dist/*"
