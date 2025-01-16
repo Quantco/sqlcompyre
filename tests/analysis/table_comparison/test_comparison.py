@@ -1,4 +1,4 @@
-# Copyright (c) QuantCo 2024-2024
+# Copyright (c) QuantCo 2024-2025
 # SPDX-License-Identifier: BSD-3-Clause
 
 """This file contains general that verify SQLCompyre's table comparison."""
@@ -7,7 +7,6 @@ import logging
 
 import pytest
 import sqlalchemy as sa
-from sqlalchemy.engine import Engine
 
 import sqlcompyre as sc
 from tests._shared import dialect_from_env
@@ -18,7 +17,7 @@ from tests._shared import dialect_from_env
     reason="Database system does not support schemas.",
 )
 def test_comparison_different_schema(
-    engine: Engine,
+    engine: sa.Engine,
     table_students: sa.Table,
     table_students_other_schema: sa.Table,
 ):
@@ -31,7 +30,7 @@ def test_comparison_different_schema(
     reason="Database system does not support schemas.",
 )
 def test_comparison_string_tables(
-    engine: Engine,
+    engine: sa.Engine,
     table_students: sa.Table,
     table_students_other_schema: sa.Table,
 ):
@@ -42,7 +41,7 @@ def test_comparison_string_tables(
 
 
 def test_comparison_string_views(
-    caplog: pytest.LogCaptureFixture, engine: Engine, view_students: sa.Table
+    caplog: pytest.LogCaptureFixture, engine: sa.Engine, view_students: sa.Table
 ):
     # Views don't have primary keys. Without inferring them, the report should only have two
     # sections

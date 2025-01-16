@@ -1,11 +1,10 @@
-# Copyright (c) QuantCo 2024-2024
+# Copyright (c) QuantCo 2024-2025
 # SPDX-License-Identifier: BSD-3-Clause
 
 from datetime import datetime
 from typing import Protocol
 
 import sqlalchemy as sa
-from sqlalchemy.engine import Engine
 
 
 class DialectProtocol(Protocol):
@@ -40,7 +39,7 @@ class DialectProtocol(Protocol):
     views_support_notnull_columns: bool
 
     def get_table_creation_timestamps(
-        self, engine: Engine, tables: list[sa.Table]
+        self, engine: sa.Engine, tables: list[sa.Table]
     ) -> list[datetime]:
         """Obtain the creation timestamps from a list of tables.
 

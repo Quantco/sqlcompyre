@@ -6,9 +6,6 @@ import logging
 from functools import cached_property
 
 import sqlalchemy as sa
-import sqlalchemy.sql.functions as func
-from sqlalchemy.engine import Engine
-from sqlalchemy.sql import elements, expression, false, select, selectable, true
 
 from sqlcompyre.report import Report
 from sqlcompyre.results import ColumnMatches, Counts, Names, RowMatches
@@ -24,7 +21,7 @@ class TableComparison:
 
     def __init__(
         self,
-        engine: Engine,
+        engine: sa.Engine,
         left_table: sa.FromClause,
         right_table: sa.FromClause,
         join_columns: list[str] | None,
@@ -169,14 +166,14 @@ class TableComparison:
             for colname_1, colname_2 in self.column_name_mapping.items()
             if colname_1 not in self.join_columns
         ]
-        inequality_conditions: list[elements.ColumnElement[bool]] = [
+        inequality_conditions: list[sa.ColumnElement[bool]] = [
             sa.not_(c) for c in equality_conditions
         ]
 
         # If there are no conditions, equality is always true, inequality is always false
         if not equality_conditions:
-            equality_conditions = [true()]
-            inequality_conditions = [false()]
+            equality_conditions = [sa.true()]
+            inequality_conditions = [sa.false()]
 
         # -- Create queries
         # Query for rows ONLY in left table
@@ -186,7 +183,7 @@ class TableComparison:
             if c not in self.join_columns
         ]
         unjoined_left = (
-            select(*left_columns)
+            sa.select(*left_columns)
             .select_from(self._outer_join(left=True))
             .where(
                 self.right_table.c[self.column_name_mapping[self.join_columns[0]]].is_(
@@ -204,7 +201,7 @@ class TableComparison:
             if k not in self.join_columns
         ]
         unjoined_right = (
-            select(*right_columns)
+            sa.select(*right_columns)
             .select_from(self._outer_join(left=False))
             .where(self.left_table.c[self.join_columns[0]].is_(None))
         )
@@ -229,7 +226,7 @@ class TableComparison:
         ]
 
         # The remaining queries
-        joined_total = select(*columns).select_from(self._inner_join())
+        joined_total = sa.select(*columns).select_from(self._inner_join())
         joined_unequal = joined_total.where(sa.or_(*inequality_conditions))
         joined_equal = joined_total.where(sa.and_(*equality_conditions))
         joined_row_count = self._count_rows(self._inner_join())
@@ -266,11 +263,11 @@ class TableComparison:
         if len(cases) == 0:
             return ColumnMatches(fraction_same={}, mismatch_selects={})
 
-        case_stmt = select(*cases).select_from(inner_join).subquery()
+        case_stmt = sa.select(*cases).select_from(inner_join).subquery()
 
         # Compute fraction of matching values
         cols_to_avg = [col for col in case_stmt.c if f"_{MATCH_SUFFIX}" in col.name]
-        avgs = select(
+        avgs = sa.select(
             *[
                 sa.func.avg(col).label(f"{col.name.replace(f'_{MATCH_SUFFIX}', '')}")
                 for col in cols_to_avg
@@ -284,7 +281,7 @@ class TableComparison:
 
         # Find column mismatches
         mismatch_selects = {
-            left_column: select(inner_join).where(
+            left_column: sa.select(inner_join).where(
                 sa.not_(self._is_equal(left_column, right_column))
             )
             for left_column, right_column in self.column_name_mapping.items()
@@ -374,9 +371,7 @@ class TableComparison:
             return str(self.right_table.element)
         return "<right query>"
 
-    def _is_equal(
-        self, left_column: str, right_column: str
-    ) -> elements.ColumnElement[bool]:
+    def _is_equal(self, left_column: str, right_column: str) -> sa.ColumnElement[bool]:
         """Forms a condition for comparing two columns.
 
         Args:
@@ -403,13 +398,13 @@ class TableComparison:
         # and inverting this is still `unknown`). For more discussion, see
         # https://stackoverflow.com/questions/1075142/how-to-compare-values-which-may-both-be-null-in-t-sql
         # The following is a more robust formulation of `A = B OR (A IS NULL AND B IS NULL)`.
-        return func.coalesce(
+        return sa.func.coalesce(
             sa.case((condition, None), else_=lhs),
             sa.case((condition, None), else_=rhs),
         ).is_(None)
 
     @cached_property
-    def _join_conditions(self) -> list[elements.ColumnElement[bool]]:
+    def _join_conditions(self) -> list[sa.ColumnElement[bool]]:
         """Forms a list of join conditions."""
         return [
             (
@@ -419,11 +414,11 @@ class TableComparison:
             for join_col in self.join_columns
         ]
 
-    def _inner_join(self) -> expression.Join:
+    def _inner_join(self) -> sa.Join:
         """Specifies an inner join on the left and right tables."""
         return self.left_table.join(self.right_table, sa.and_(*self._join_conditions))
 
-    def _outer_join(self, left: bool) -> expression.Join:
+    def _outer_join(self, left: bool) -> sa.Join:
         """Specifies an outer join between the two tables.
 
         Args:
@@ -438,7 +433,7 @@ class TableComparison:
             return left_table.outerjoin(right_table, sa.and_(*self._join_conditions))
         return right_table.outerjoin(left_table, sa.and_(*self._join_conditions))
 
-    def _get_aggregate_changes(self, left_col_name: str) -> selectable.Select:
+    def _get_aggregate_changes(self, left_col_name: str) -> sa.Select:
         """Counts the number of different ways each column changes from one table to
         another.
 
@@ -462,14 +457,14 @@ class TableComparison:
         )
 
         return (
-            select(change, sa.func.count())
+            sa.select(change, sa.func.count())
             .select_from(self._inner_join())
             .where(sa.not_(self._is_equal(left_col_name, right_col_name)))
             .group_by(left_col, right_col)
             .order_by(sa.func.count().desc())
         )
 
-    def _count_rows(self, table: expression.FromClause) -> int:
+    def _count_rows(self, table: sa.FromClause) -> int:
         """Counts the number of rows in a table-like object.
 
         Args:
@@ -479,7 +474,9 @@ class TableComparison:
             The number of rows.
         """
         with self.engine.connect() as conn:
-            return conn.execute(select(sa.func.count()).select_from(table)).scalar_one()
+            return conn.execute(
+                sa.select(sa.func.count()).select_from(table)
+            ).scalar_one()
 
     # ---------------------------------------------------------------------------------------------
     # STRING REPRESENTATION
@@ -502,7 +499,7 @@ class TableComparison:
 
 
 def _join_columns_from_pk_if_needed(
-    engine: Engine,
+    engine: sa.Engine,
     left: sa.FromClause,
     right: sa.FromClause,
     join_columns: list[str],
@@ -564,7 +561,7 @@ def _join_columns_from_pk_if_needed(
 
 
 def _is_valid_primary_key_column(
-    engine: Engine,
+    engine: sa.Engine,
     left_table: sa.FromClause,
     right_table: sa.FromClause,
     left_column: str,
@@ -593,7 +590,7 @@ def _is_valid_primary_key_column(
 
 
 def _is_valid_primary_key(
-    engine: Engine, table: sa.FromClause, columns: list[str]
+    engine: sa.Engine, table: sa.FromClause, columns: list[str]
 ) -> bool:
     with engine.connect() as conn:
         result = conn.execute(

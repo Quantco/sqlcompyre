@@ -1,22 +1,21 @@
-# Copyright (c) QuantCo 2024-2024
+# Copyright (c) QuantCo 2024-2025
 # SPDX-License-Identifier: BSD-3-Clause
 
 """This file contains tests that verify the "top changes" comparison."""
 
 import sqlalchemy as sa
-from sqlalchemy.engine import Engine
 
 import sqlcompyre as sc
 
 
-def test_by_top_changes_same(engine: Engine, table_students: sa.Table):
+def test_by_top_changes_same(engine: sa.Engine, table_students: sa.Table):
     comp = sc.compare_tables(engine, table_students, table_students)
     assert not comp.get_top_changes("age")
     assert not comp.get_top_changes("name")
 
 
 def test_column_matches_changes_different(
-    engine: Engine,
+    engine: sa.Engine,
     table_students_modified_1: sa.Table,
     table_students_modified_2: sa.Table,
 ):

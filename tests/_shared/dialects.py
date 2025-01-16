@@ -1,11 +1,11 @@
-# Copyright (c) QuantCo 2024-2024
+# Copyright (c) QuantCo 2024-2025
 # SPDX-License-Identifier: BSD-3-Clause
 
 from __future__ import annotations
 
 import os
 
-from sqlalchemy.engine import url
+import sqlalchemy as sa
 
 from sqlcompyre.analysis.dialects import DialectProtocol
 
@@ -17,15 +17,13 @@ def dialect_from_env() -> DialectProtocol:
     connection string. **Use this function with care!** Typically, it should only be
     used for ``pytest.mark.skipif`` statements.
     """
-    conn = url.make_url(os.environ["DB_CONNECTION_STRING"])
+    conn = sa.make_url(os.environ["DB_CONNECTION_STRING"])
     return dialect_from_connection_url(conn)
 
 
-def dialect_from_connection_url(conn_url: url.URL) -> DialectProtocol:
+def dialect_from_connection_url(conn_url: sa.URL) -> DialectProtocol:
     """Get dialect metadata from the connection URL."""
-    from sqlalchemy import create_engine
-
-    dialect = create_engine(conn_url).dialect
+    dialect = sa.create_engine(conn_url).dialect
     match dialect.name:
         case "mssql":
             from sqlcompyre.analysis.dialects import MssqlDialect

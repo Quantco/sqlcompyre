@@ -1,4 +1,4 @@
-# Copyright (c) QuantCo 2024-2024
+# Copyright (c) QuantCo 2024-2025
 # SPDX-License-Identifier: BSD-3-Clause
 
 """This file contains tests that verify SQLCompyre's behavior for NULL values."""
@@ -8,8 +8,6 @@ from typing import Any
 import pandas as pd
 import pytest
 import sqlalchemy as sa
-from sqlalchemy import Column, Integer
-from sqlalchemy.engine import Engine
 
 import sqlcompyre as sc
 from tests._shared import TableFactory
@@ -19,10 +17,10 @@ from tests._shared import TableFactory
 # -------------------------------------------------------------------------------------------------
 
 
-def table_columns() -> list[Column]:
+def table_columns() -> list[sa.Column]:
     return [
-        Column("id", Integer(), primary_key=True),
-        Column("value", Integer(), nullable=True),
+        sa.Column("id", sa.Integer(), primary_key=True),
+        sa.Column("value", sa.Integer(), nullable=True),
     ]
 
 
@@ -53,14 +51,16 @@ def table_rhs(table_factory: TableFactory) -> sa.Table:
 # -------------------------------------------------------------------------------------------------
 
 
-def test_null_equal(engine: Engine, table_lhs: sa.Table, table_rhs: sa.Table):
+def test_null_equal(engine: sa.Engine, table_lhs: sa.Table, table_rhs: sa.Table):
     row_matches = sc.compare_tables(engine, table_lhs, table_rhs).row_matches
     assert row_matches.n_joined_total == 4
     assert row_matches.n_joined_equal == 2
     assert row_matches.n_joined_unequal == 2
 
 
-def test_null_column_matches(engine: Engine, table_lhs: sa.Table, table_rhs: sa.Table):
+def test_null_column_matches(
+    engine: sa.Engine, table_lhs: sa.Table, table_rhs: sa.Table
+):
     column_matches = sc.compare_tables(engine, table_lhs, table_rhs).column_matches
     assert column_matches.fraction_same["value"] == 0.5
 
@@ -69,7 +69,7 @@ def test_null_column_matches(engine: Engine, table_lhs: sa.Table, table_rhs: sa.
 
 
 def test_null_top_changes(
-    engine: Engine,
+    engine: sa.Engine,
     table_lhs: sa.Table,
     table_rhs: sa.Table,
 ):

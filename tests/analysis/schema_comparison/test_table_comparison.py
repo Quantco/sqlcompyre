@@ -1,8 +1,8 @@
-# Copyright (c) QuantCo 2024-2024
+# Copyright (c) QuantCo 2024-2025
 # SPDX-License-Identifier: BSD-3-Clause
 
 import pytest
-from sqlalchemy.engine import Engine
+import sqlalchemy as sa
 
 import sqlcompyre as sc
 from tests._shared import dialect_from_env
@@ -13,7 +13,9 @@ pytestmark = pytest.mark.skipif(
 )
 
 
-def test_table_comparison_case_sensitive(engine: Engine, schema_1: str, schema_2: str):
+def test_table_comparison_case_sensitive(
+    engine: sa.Engine, schema_1: str, schema_2: str
+):
     comparison = sc.compare_schemas(engine, schema_1, schema_2)
 
     with pytest.raises(ValueError):
@@ -24,7 +26,7 @@ def test_table_comparison_case_sensitive(engine: Engine, schema_1: str, schema_2
 
 
 def test_table_comparison_case_insensitive(
-    engine: Engine, schema_1: str, schema_2: str
+    engine: sa.Engine, schema_1: str, schema_2: str
 ):
     comparison = sc.compare_schemas(engine, schema_1, schema_2, ignore_casing=True)
 

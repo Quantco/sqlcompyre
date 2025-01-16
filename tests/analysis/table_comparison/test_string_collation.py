@@ -1,4 +1,4 @@
-# Copyright (c) QuantCo 2024-2024
+# Copyright (c) QuantCo 2024-2025
 # SPDX-License-Identifier: BSD-3-Clause
 
 """This file contains tests that verify SQLCompyre's behavior for comparing string
@@ -8,8 +8,6 @@ from typing import Any
 
 import pytest
 import sqlalchemy as sa
-from sqlalchemy import Column, Integer, String
-from sqlalchemy.engine import Engine
 
 import sqlcompyre as sc
 from tests._shared import TableFactory
@@ -19,23 +17,23 @@ from tests._shared import TableFactory
 # -------------------------------------------------------------------------------------------------
 
 
-def table_columns(engine: Engine) -> list[Column]:
+def table_columns(engine: sa.Engine) -> list[sa.Column]:
     return [
-        Column("id", Integer(), primary_key=True),
-        Column(
+        sa.Column("id", sa.Integer(), primary_key=True),
+        sa.Column(
             "value",
-            String(collation=engine.dialect.case_insensitive_collation),  # type: ignore
+            sa.String(collation=engine.dialect.case_insensitive_collation),  # type: ignore
         ),
-        Column(
+        sa.Column(
             "value_case_sensitive",
-            String(collation=engine.dialect.case_sensitive_collation),  # type: ignore
+            sa.String(collation=engine.dialect.case_sensitive_collation),  # type: ignore
         ),
-        Column("non_str_value", Integer()),
+        sa.Column("non_str_value", sa.Integer()),
     ]
 
 
 @pytest.fixture(scope="module")
-def table_lhs(table_factory: TableFactory, engine: Engine) -> sa.Table:
+def table_lhs(table_factory: TableFactory, engine: sa.Engine) -> sa.Table:
     data: list[dict[str, Any]] = [
         dict(id=1, value="test", value_case_sensitive="test", non_str_value=1),
         dict(id=2, value="Test", value_case_sensitive="Test", non_str_value=1),
@@ -44,7 +42,7 @@ def table_lhs(table_factory: TableFactory, engine: Engine) -> sa.Table:
 
 
 @pytest.fixture(scope="module")
-def table_rhs(table_factory: TableFactory, engine: Engine) -> sa.Table:
+def table_rhs(table_factory: TableFactory, engine: sa.Engine) -> sa.Table:
     data: list[dict[str, Any]] = [
         dict(id=1, value="test", value_case_sensitive="test", non_str_value=1),
         dict(id=2, value="TEST", value_case_sensitive="TEST", non_str_value=1),
@@ -58,7 +56,7 @@ def table_rhs(table_factory: TableFactory, engine: Engine) -> sa.Table:
 
 
 def test_str_equal_no_collation(
-    engine: Engine, table_lhs: sa.Table, table_rhs: sa.Table
+    engine: sa.Engine, table_lhs: sa.Table, table_rhs: sa.Table
 ):
     column_matches = sc.compare_tables(engine, table_lhs, table_rhs).column_matches
     assert column_matches.fraction_same["value"] == 1
@@ -67,7 +65,7 @@ def test_str_equal_no_collation(
 
 
 def test_str_equal_case_sensitive_collation(
-    engine: Engine,
+    engine: sa.Engine,
     table_lhs: sa.Table,
     table_rhs: sa.Table,
 ):

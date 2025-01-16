@@ -1,4 +1,4 @@
-# Copyright (c) QuantCo 2024-2024
+# Copyright (c) QuantCo 2024-2025
 # SPDX-License-Identifier: BSD-3-Clause
 
 import time
@@ -7,8 +7,6 @@ from datetime import datetime
 
 import pytest
 import sqlalchemy as sa
-from sqlalchemy import Column, Integer
-from sqlalchemy.engine import Engine
 
 from sqlcompyre.analysis.dialects import MssqlDialect
 from tests._shared import SchemaFactory, TableFactory, dialect_from_env
@@ -19,8 +17,8 @@ pytestmark = pytest.mark.skipif(
 )
 
 
-def table_columns() -> list[Column]:
-    return [Column("id", Integer(), primary_key=True)]
+def table_columns() -> list[sa.Column]:
+    return [sa.Column("id", sa.Integer(), primary_key=True)]
 
 
 @pytest.fixture(scope="session")
@@ -30,7 +28,7 @@ def creation_timestamp() -> datetime:
 
 @pytest.fixture()  # do not use a scope here as this fixture is modified in tests
 def schema_and_tables_and_views(
-    engine: Engine,
+    engine: sa.Engine,
     schema_factory: SchemaFactory,
     creation_timestamp: datetime,  # keep here to initialize the fixture
 ) -> tuple[str, sa.Table, sa.Table, sa.Table]:
@@ -48,7 +46,7 @@ def schema_and_tables_and_views(
 
 
 def test_get_table_creation_timestamps(
-    engine: Engine,
+    engine: sa.Engine,
     schema_and_tables_and_views: tuple[str, sa.Table, sa.Table, sa.Table],
     creation_timestamp: datetime,
 ):
@@ -65,7 +63,7 @@ def test_get_table_creation_timestamps(
 
 
 def test_get_table_creation_timestamps_different_database(
-    engine: Engine,
+    engine: sa.Engine,
     schema_and_tables_and_views: tuple[str, sa.Table, sa.Table, sa.Table],
 ):
     _, table1, table2, _ = schema_and_tables_and_views
@@ -76,7 +74,7 @@ def test_get_table_creation_timestamps_different_database(
 
 
 def test_get_table_creation_timestamps_different_multipart(
-    engine: Engine,
+    engine: sa.Engine,
     schema_and_tables_and_views: tuple[str, sa.Table, sa.Table, sa.Table],
 ):
     _, table1, table2, _ = schema_and_tables_and_views

@@ -4,7 +4,6 @@
 import sys
 
 import sqlalchemy as sa
-from sqlalchemy import schema
 
 from .analysis import QueryInspection, SchemaComparison, TableComparison
 
@@ -248,7 +247,7 @@ def _get_tables_from_schema(
     schema: str,
     is_database: bool,
     include_views: bool,
-) -> list[schema.Table]:
+) -> list[sa.Table]:
     if is_database:
         engine = sa.create_engine(engine.url.set(database=schema))
         schemas = sa.inspect(engine).get_schema_names()
