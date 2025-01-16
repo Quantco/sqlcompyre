@@ -322,9 +322,6 @@ class TableComparison:
         Returns:
             A report summarizing the comparison of the two tables.
         """
-        left_name = str(self.left_table.element)  # type: ignore
-        right_name = str(self.right_table.element)  # type: ignore
-
         description = None
         sections = {
             "Column Names": self.column_names,
@@ -348,16 +345,34 @@ class TableComparison:
             logging.warning(
                 "'%s' and '%s' cannot be matched (%s): dropping row and column matches "
                 "from the report",
-                left_name,
-                right_name,
+                self._left_table_name,
+                self._right_table_name,
                 exc,
             )
 
-        return Report("tables", left_name, right_name, description, sections)
+        return Report(
+            "tables",
+            self._left_table_name,
+            self._right_table_name,
+            description,
+            sections,
+        )
 
     # ---------------------------------------------------------------------------------------------
     # UTILITY METHODS
     # ---------------------------------------------------------------------------------------------
+
+    @property
+    def _left_table_name(self) -> str:
+        if isinstance(self.left_table, sa.Alias):
+            return str(self.left_table.element)
+        return "<left query>"
+
+    @property
+    def _right_table_name(self) -> str:
+        if isinstance(self.right_table, sa.Alias):
+            return str(self.right_table.element)
+        return "<right query>"
 
     def _is_equal(
         self, left_column: str, right_column: str
@@ -476,8 +491,8 @@ class TableComparison:
     def __str__(self):
         return (
             f"{self.__class__.__name__}("
-            f'left_table="{self.left_table.element}", '  # type: ignore
-            f'right_table="{self.right_table.element}")'  # type: ignore
+            f'left_table="{self._left_table_name}", '
+            f'right_table="{self._right_table_name}")'
         )
 
 

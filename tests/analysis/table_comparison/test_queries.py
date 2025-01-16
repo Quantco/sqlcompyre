@@ -6,6 +6,15 @@ import sqlalchemy as sa
 import sqlcompyre as sc
 
 
+def test_compare_queries_join_columns_inferred(
+    engine: sa.Engine, table_students: sa.Table
+):
+    comparison = sc.compare_tables(
+        engine, sa.select(table_students), sa.select(table_students)
+    )
+    assert comparison.join_columns == ["id"]
+
+
 def test_compare_queries_select(engine: sa.Engine, table_students: sa.Table):
     comparison = sc.compare_tables(
         engine,
