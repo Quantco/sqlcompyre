@@ -57,7 +57,9 @@ class TableFactory:
             trans.execute(_CreateView(fullname, query))
 
         # Return with self.schema instead of schema here to keep multi-part schemas
-        columns = [sa.Column(name, col.type) for name, col in query.columns.items()]
+        columns = [
+            sa.Column(name, col.type) for name, col in query.selected_columns.items()
+        ]
         return sa.Table(name, self.metadata, *columns, schema=self.schema)
 
 

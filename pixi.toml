@@ -57,6 +57,7 @@ test-coverage = "python -m pytest --cov=sqlcompyre --cov-report=xml --cov-report
 [feature.build.dependencies]
 python-build = "*"
 twine = "*"
+wheel = "*"
 [feature.build.tasks]
 build-wheel = "python -m build --no-isolation ."
 check-wheel = "twine check dist/*"
@@ -78,6 +79,8 @@ pre-commit-run = "pre-commit run -a"
 python = "3.11.*"
 [feature.py312.dependencies]
 python = "3.12.*"
+[feature.py313.dependencies]
+python = "3.13.*"
 
 [environments]
 build = ["build"]
@@ -86,3 +89,4 @@ docs = ["docs"]
 lint = { features = ["lint"], no-default-feature = true }
 py311 = ["py311", "test"]
 py312 = ["py312", "test"]
+py313 = ["py313", "test"]
