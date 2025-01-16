@@ -136,7 +136,9 @@ class TerminalFormatter(Formatter):
                 name,
                 # We use math.floor here to make sure that we don't display 100.00% match
                 # rate if the actual match rate is not exactly 100% (but e.g. 99.9999%).
-                "n/a" if math.isnan(match) else f"{math.floor(match*10000)/10000:.2%}",
+                "n/a"
+                if math.isnan(match)
+                else f"{math.floor(match * 10000) / 10000:.2%}",
             ]
             for name, match in sorted(
                 column_matches.fraction_same.items(), key=lambda x: x[0]
