@@ -29,6 +29,8 @@ def inspect(engine: sa.Engine, query: sa.Select | sa.FromClause) -> QueryInspect
         :meth:`inspect_table` if you want to inspect the results of ``SELECT * FROM table`` and
         specify the table as a string.
     """
+    if isinstance(query, sa.Select):
+        return QueryInspection(engine, query.subquery())
     return QueryInspection(engine, query)
 
 
