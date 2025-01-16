@@ -4,8 +4,6 @@
 import functools
 import logging
 import sys
-import tempfile
-import warnings
 from dataclasses import dataclass
 from pathlib import Path
 from typing import Literal
@@ -103,84 +101,6 @@ def main(ctx: click.Context, format: str | None, writer: str):
     writer_cls = get_writer(writer, formatter)
 
     ctx.obj = CliConfig(writer_cls)
-
-
-@main.command()
-@click.argument(
-    "left_parquet",
-    type=click.Path(exists=True, dir_okay=True, path_type=Path),
-)
-@click.argument(
-    "right_parquet",
-    type=click.Path(exists=True, dir_okay=True, path_type=Path),
-)
-@table_comparison_options
-@click.pass_obj
-def parquet(
-    obj: CliConfig,
-    left_parquet: Path,
-    right_parquet: Path,
-    join_columns: str | None,
-    hide_matching_columns: bool,
-    float_precision: float,
-    collation: str | None,
-    ignore_casing: bool,
-    infer_primary_keys: bool,
-):
-    """Compare two (sets of) parquet files using DuckDB."""
-    # Disable some warnings emitted by duckdb-engine
-    warnings.filterwarnings(
-        "ignore", message="duckdb-engine doesn't yet support reflection on indices"
-    )
-    warnings.filterwarnings("ignore", message="Did not recognize type 'list' of column")
-
-    # Create temporary database for subsequent operations
-    with tempfile.TemporaryDirectory() as tmpdir:
-        db_path = Path(tmpdir) / "duck.db"
-        connection_string = f"duckdb:///{db_path}"
-        engine = sa.create_engine(connection_string)
-
-        # Create referenceable views on top of the parquet files
-        left_source_path = (
-            str(left_parquet) if left_parquet.is_file() else f"{left_parquet}/*.parquet"
-        )
-        left_query = (
-            "CREATE VIEW left_parquet AS "
-            f"(SELECT * FROM read_parquet('{left_source_path}'))"
-        )
-
-        right_source_path = (
-            str(right_parquet)
-            if right_parquet.is_file()
-            else f"{right_parquet}/*.parquet"
-        )
-        right_query = (
-            "CREATE VIEW right_parquet AS "
-            f"(SELECT * FROM read_parquet('{right_source_path}'))"
-        )
-
-        with engine.begin() as tx:
-            tx.execute(sa.text(left_query))
-            tx.execute(sa.text(right_query))
-
-        # Once these views are created, we can actually run the comparison
-        # Run the comparison and get the report
-        comparison = sc.compare_tables(
-            engine,
-            "left_parquet",
-            "right_parquet",
-            join_columns=join_columns.split(",") if join_columns is not None else None,
-            float_precision=float_precision,
-            collation=collation,
-            ignore_casing=ignore_casing,
-            infer_primary_keys=infer_primary_keys,
-        )
-        report = comparison.summary_report()
-
-        # Write the report
-        obj.writer.write(
-            {"comparison": report}, hide_matching_columns=hide_matching_columns
-        )
 
 
 @main.command()
