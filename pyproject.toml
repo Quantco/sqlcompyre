@@ -5,14 +5,12 @@ requires = ["setuptools", "setuptools-scm", "wheel"]
 version_scheme = "post-release"
 
 [project]
-name = "sqlcompyre"
-description = "Tool for comparing and inspecting data in SQL databases."
 authors = [{ name = "Oliver Borchert", email = "oliver.borchert@quantco.com" }]
-dynamic = ["version"]
 classifiers = [
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
 ]
 dependencies = [
   "click",
@@ -22,6 +20,9 @@ dependencies = [
   "tabulate",
   "tqdm",
 ]
+description = "Tool for comparing and inspecting data in SQL databases."
+dynamic = ["version"]
+name = "sqlcompyre"
 readme = "README.md"
 requires-python = ">=3.11"
 
@@ -88,5 +89,8 @@ python_version = '3.11'
 
 [tool.pytest.ini_options]
 addopts = "--import-mode=importlib --cov=sqlcompyre --cov-report term-missing --color=yes"
+filterwarnings = [
+  "ignore:.*Dialect sqlite.pysqlite will not make use of SQL compilation:Warning",
+]
 markers = ["skip_dialect(dialect): skip this test for a certain dialect"]
 testpaths = ["tests"]
