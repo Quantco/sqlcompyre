@@ -1,15 +1,14 @@
-# Copyright (c) QuantCo 2024-2024
+# Copyright (c) QuantCo 2024-2025
 # SPDX-License-Identifier: BSD-3-Clause
 
 import functools
 import logging
 from functools import cached_property
-from typing import cast
 
 import sqlalchemy as sa
 import sqlalchemy.sql.functions as func
 from sqlalchemy.engine import Engine
-from sqlalchemy.sql import elements, expression, false, schema, select, selectable, true
+from sqlalchemy.sql import elements, expression, false, select, selectable, true
 
 from sqlcompyre.report import Report
 from sqlcompyre.results import ColumnMatches, Counts, Names, RowMatches
@@ -26,8 +25,8 @@ class TableComparison:
     def __init__(
         self,
         engine: Engine,
-        left_table: schema.Table,
-        right_table: schema.Table,
+        left_table: sa.FromClause,
+        right_table: sa.FromClause,
         join_columns: list[str] | None,
         column_name_mapping: dict[str, str] | None,
         ignore_columns: list[str] | None,
@@ -54,8 +53,8 @@ class TableComparison:
             infer_primary_keys: Whether to infer primary keys if none are available.
         """
         self.engine = engine
-        self.left_table = cast(expression.Alias, left_table.alias("left"))
-        self.right_table = cast(expression.Alias, right_table.alias("right"))
+        self.left_table = left_table.alias("left")
+        self.right_table = right_table.alias("right")
         self.column_name_mapping = _identity_column_mapping_if_needed(
             left_table,
             right_table,
@@ -79,8 +78,8 @@ class TableComparison:
         """The columns used for joining the two tables."""
         pks = _join_columns_from_pk_if_needed(
             self.engine,
-            cast(sa.Table, self.left_table.element),
-            cast(sa.Table, self.right_table.element),
+            self.left_table,
+            self.right_table,
             self._user_join_columns,
             ignore_casing=self.ignore_casing,
             column_name_mapping=self.column_name_mapping,
@@ -323,9 +322,6 @@ class TableComparison:
         Returns:
             A report summarizing the comparison of the two tables.
         """
-        left_name = str(self.left_table.original)
-        right_name = str(self.right_table.original)
-
         description = None
         sections = {
             "Column Names": self.column_names,
@@ -349,16 +345,34 @@ class TableComparison:
             logging.warning(
                 "'%s' and '%s' cannot be matched (%s): dropping row and column matches "
                 "from the report",
-                left_name,
-                right_name,
+                self._left_table_name,
+                self._right_table_name,
                 exc,
             )
 
-        return Report("tables", left_name, right_name, description, sections)
+        return Report(
+            "tables",
+            self._left_table_name,
+            self._right_table_name,
+            description,
+            sections,
+        )
 
     # ---------------------------------------------------------------------------------------------
     # UTILITY METHODS
     # ---------------------------------------------------------------------------------------------
+
+    @property
+    def _left_table_name(self) -> str:
+        if isinstance(self.left_table, sa.Alias):
+            return str(self.left_table.element)
+        return "<left query>"
+
+    @property
+    def _right_table_name(self) -> str:
+        if isinstance(self.right_table, sa.Alias):
+            return str(self.right_table.element)
+        return "<right query>"
 
     def _is_equal(
         self, left_column: str, right_column: str
@@ -477,8 +491,8 @@ class TableComparison:
     def __str__(self):
         return (
             f"{self.__class__.__name__}("
-            f'left_table="{self.left_table.original}", '
-            f'right_table="{self.right_table.original}")'
+            f'left_table="{self._left_table_name}", '
+            f'right_table="{self._right_table_name}")'
         )
 
 
@@ -489,8 +503,8 @@ class TableComparison:
 
 def _join_columns_from_pk_if_needed(
     engine: Engine,
-    left: sa.Table,
-    right: sa.Table,
+    left: sa.FromClause,
+    right: sa.FromClause,
     join_columns: list[str],
     ignore_casing: bool,
     column_name_mapping: dict[str, str],
@@ -503,8 +517,8 @@ def _join_columns_from_pk_if_needed(
         join_columns = [lowercase_map[c.lower()] for c in join_columns]
 
     if not join_columns:
-        left_pks = {pk.name for pk in sa.inspect(left).primary_key}
-        right_pks = {pk.name for pk in sa.inspect(right).primary_key}
+        left_pks = {col.name for col in left.columns if col.primary_key}
+        right_pks = {col.name for col in right.columns if col.primary_key}
         reverse_mapping = {v: k for k, v in column_name_mapping.items()}
         if not (left_pks - set(column_name_mapping) | right_pks - set(reverse_mapping)):
             # All primary keys can be matched
@@ -551,8 +565,8 @@ def _join_columns_from_pk_if_needed(
 
 def _is_valid_primary_key_column(
     engine: Engine,
-    left_table: sa.Table,
-    right_table: sa.Table,
+    left_table: sa.FromClause,
+    right_table: sa.FromClause,
     left_column: str,
     right_column: str,
 ) -> bool:
@@ -578,7 +592,9 @@ def _is_valid_primary_key_column(
     return left_nulls == 0 and right_nulls == 0
 
 
-def _is_valid_primary_key(engine: Engine, table: sa.Table, columns: list[str]) -> bool:
+def _is_valid_primary_key(
+    engine: Engine, table: sa.FromClause, columns: list[str]
+) -> bool:
     with engine.connect() as conn:
         result = conn.execute(
             sa.select(*[table.c[c] for c in columns])
@@ -590,8 +606,8 @@ def _is_valid_primary_key(engine: Engine, table: sa.Table, columns: list[str]) -
 
 
 def _identity_column_mapping_if_needed(
-    left: sa.schema.Table,
-    right: sa.schema.Table,
+    left: sa.FromClause,
+    right: sa.FromClause,
     mapping: dict[str, str],
     ignore_columns: list[str],
     ignore_casing: bool,
