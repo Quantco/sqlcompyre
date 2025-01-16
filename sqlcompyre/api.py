@@ -74,8 +74,8 @@ def inspect_table(engine: sa.Engine, table: sa.Table | str) -> QueryInspection:
 
 def compare_tables(
     engine: sa.Engine,
-    left: sa.Table | str,
-    right: sa.Table | str,
+    left: sa.FromClause | str,
+    right: sa.FromClause | str,
     join_columns: list[str] | None = None,
     ignore_columns: list[str] | None = None,
     column_name_mapping: dict[str, str] | None = None,
@@ -118,8 +118,8 @@ def compare_tables(
         A table comparison object that can be used to explore the differences in the tables.
     """
     # Get the SQLAlchemy representation of the tables in the database
-    left_table: sa.Table
-    right_table: sa.Table
+    left_table: sa.FromClause
+    right_table: sa.FromClause
     if isinstance(left, str) or isinstance(right, str):
         meta = sa.MetaData()
 
