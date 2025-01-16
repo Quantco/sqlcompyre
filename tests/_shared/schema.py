@@ -2,7 +2,6 @@
 # SPDX-License-Identifier: BSD-3-Clause
 
 import sqlalchemy as sa
-from sqlalchemy.engine import reflection, url
 from sqlalchemy.schema import CreateSchema, DropSchema
 from sqlalchemy_utils import create_database, database_exists, drop_database
 
@@ -12,7 +11,7 @@ from .dialects import dialect_from_connection_url
 class SchemaFactory:
     """Simple utility class to create schemas for testing."""
 
-    def __init__(self, connection_url: url.URL):
+    def __init__(self, connection_url: sa.URL):
         """
         Args:
             connection_url: The connection string to connect to the database.
@@ -42,7 +41,7 @@ class SchemaFactory:
 
         # For all other databases, we simply create a schema
         engine = sa.create_engine(self.connection_url)
-        inspector: reflection.Inspector = sa.inspect(engine)
+        inspector = sa.inspect(engine)
         with engine.connect() as conn:
             if name in inspector.get_schema_names():
                 conn.execute(DropSchema(name, cascade=True))

@@ -8,8 +8,6 @@ from typing import Any
 
 import pytest
 import sqlalchemy as sa
-from sqlalchemy import Column, Integer
-from sqlalchemy.engine import Engine
 
 import sqlcompyre as sc
 from tests._shared import TableFactory
@@ -19,19 +17,19 @@ from tests._shared import TableFactory
 # -------------------------------------------------------------------------------------------------
 
 
-def table_columns() -> list[Column]:
-    return [Column("id", Integer(), nullable=False)]
+def table_columns() -> list[sa.Column]:
+    return [sa.Column("id", sa.Integer(), nullable=False)]
 
 
-def only_nullable_columns() -> list[Column]:
-    return [Column("id", Integer())]
+def only_nullable_columns() -> list[sa.Column]:
+    return [sa.Column("id", sa.Integer())]
 
 
-def nullable_table_columns() -> list[Column]:
+def nullable_table_columns() -> list[sa.Column]:
     return [
-        Column("id", Integer(), nullable=False),
-        Column("other_with_null", Integer()),
-        Column("other_without_null", Integer()),
+        sa.Column("id", sa.Integer(), nullable=False),
+        sa.Column("other_with_null", sa.Integer()),
+        sa.Column("other_without_null", sa.Integer()),
     ]
 
 
@@ -82,7 +80,7 @@ def table_only_null(table_factory: TableFactory) -> sa.Table:
 # -------------------------------------------------------------------------------------------------
 
 
-def test_no_pk_row_matches(engine: Engine, table_lhs: sa.Table, table_rhs: sa.Table):
+def test_no_pk_row_matches(engine: sa.Engine, table_lhs: sa.Table, table_rhs: sa.Table):
     # Do not fail immediately if not inferring primary keys...
     comparison = sc.compare_tables(engine, table_lhs, table_rhs)
     assert comparison.row_counts.equal
@@ -101,7 +99,7 @@ def test_no_pk_row_matches(engine: Engine, table_lhs: sa.Table, table_rhs: sa.Ta
 
 
 def test_no_pk_row_matches_duplicates(
-    engine: Engine, table_lhs: sa.Table, table_rhs_duplicate: sa.Table
+    engine: sa.Engine, table_lhs: sa.Table, table_rhs_duplicate: sa.Table
 ):
     with pytest.raises(ValueError, match="would cause duplicates"):
         sc.compare_tables(
@@ -109,7 +107,7 @@ def test_no_pk_row_matches_duplicates(
         ).row_matches
 
 
-def test_no_pk_row_matches_nulls(engine: Engine, table_only_null: sa.Table):
+def test_no_pk_row_matches_nulls(engine: sa.Engine, table_only_null: sa.Table):
     with pytest.raises(ValueError, match="no non-null columns"):
         sc.compare_tables(
             engine, table_only_null, table_only_null, infer_primary_keys=True
@@ -117,7 +115,7 @@ def test_no_pk_row_matches_nulls(engine: Engine, table_only_null: sa.Table):
 
 
 def test_no_pk_row_matches_nullable_columns(
-    engine: Engine, table_lhs_nullable: sa.Table, table_rhs_nullable: sa.Table
+    engine: sa.Engine, table_lhs_nullable: sa.Table, table_rhs_nullable: sa.Table
 ):
     comparison = sc.compare_tables(
         engine, table_lhs_nullable, table_rhs_nullable, infer_primary_keys=True

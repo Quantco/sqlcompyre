@@ -4,7 +4,6 @@
 
 import pytest
 import sqlalchemy as sa
-from sqlalchemy import Column, Integer, String
 
 from tests._shared import TableFactory
 
@@ -20,11 +19,11 @@ CHARACTER_DATA = [
 ]
 
 
-def columns() -> list[Column]:
+def columns() -> list[sa.Column]:
     return [
-        Column("first_name", String(length=20)),
-        Column("last_name", String(length=20)),
-        Column("age", Integer()),
+        sa.Column("first_name", sa.String(length=20)),
+        sa.Column("last_name", sa.String(length=20)),
+        sa.Column("age", sa.Integer()),
     ]
 
 

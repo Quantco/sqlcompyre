@@ -5,22 +5,23 @@ import time
 
 import pytest
 import sqlalchemy as sa
-from sqlalchemy import Column, Integer
-from sqlalchemy.engine import Engine
 
 from tests._shared import SchemaFactory, TableFactory
 
 
-def table_columns() -> list[Column]:
-    return [Column("id", Integer(), primary_key=True), Column("value", Integer())]
+def table_columns() -> list[sa.Column]:
+    return [
+        sa.Column("id", sa.Integer(), primary_key=True),
+        sa.Column("value", sa.Integer()),
+    ]
 
 
-def table_columns_no_pk() -> list[Column]:
-    return [Column("id", Integer())]
+def table_columns_no_pk() -> list[sa.Column]:
+    return [sa.Column("id", sa.Integer())]
 
 
 @pytest.fixture(scope="session")
-def schema_1(engine: Engine, schema_factory: SchemaFactory) -> str:
+def schema_1(engine: sa.Engine, schema_factory: SchemaFactory) -> str:
     schema = schema_factory.create("compyre_full_1")
     factory = TableFactory(engine, schema)
     factory.create("table4", table_columns(), [])
@@ -36,7 +37,7 @@ def schema_1(engine: Engine, schema_factory: SchemaFactory) -> str:
 
 
 @pytest.fixture(scope="session")
-def schema_2(engine: Engine, schema_factory: SchemaFactory) -> str:
+def schema_2(engine: sa.Engine, schema_factory: SchemaFactory) -> str:
     schema = schema_factory.create("compyre_full_2")
     factory = TableFactory(engine, schema)
     table1 = factory.create("table1", table_columns(), [dict(id=1, value=4)])
@@ -49,7 +50,7 @@ def schema_2(engine: Engine, schema_factory: SchemaFactory) -> str:
 
 
 @pytest.fixture(scope="session")
-def schema_duplicate_table(engine: Engine, schema_factory: SchemaFactory) -> str:
+def schema_duplicate_table(engine: sa.Engine, schema_factory: SchemaFactory) -> str:
     schema = schema_factory.create("compyre_full_3")
     factory = TableFactory(engine, schema)
     factory.create("table1", table_columns_no_pk(), [dict(id=1), dict(id=1)])

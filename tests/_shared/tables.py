@@ -4,17 +4,15 @@
 from typing import Any
 
 import sqlalchemy as sa
-from sqlalchemy import MetaData, schema
-from sqlalchemy.engine import Engine
 from sqlalchemy.ext.compiler import compiles
-from sqlalchemy.schema import DDLElement, DropTable
-from sqlalchemy.sql import compiler, selectable
+from sqlalchemy.schema import DropTable
+from sqlalchemy.sql import compiler
 
 
 class TableFactory:
     """Simple utility class to create tables for testing."""
 
-    def __init__(self, engine: Engine, schema: str | None):
+    def __init__(self, engine: sa.Engine, schema: str | None):
         """
         Args:
             engine: The engine to interact with the database.
@@ -23,12 +21,12 @@ class TableFactory:
         """
         self.engine = engine
         self.schema = schema
-        self.metadata = MetaData()
+        self.metadata = sa.MetaData()
 
     def create(
         self,
         name: str,
-        columns: list[schema.Column],
+        columns: list[sa.Column],
         data: list[dict[str, Any]],
     ) -> sa.Table:
         """Creates a new table in the database with the given metadata and values."""
@@ -41,7 +39,7 @@ class TableFactory:
                 trans.execute(table.insert().values(), data)
             return table
 
-    def create_view(self, name: str, query: selectable.Select) -> sa.Table:
+    def create_view(self, name: str, query: sa.Select) -> sa.Table:
         """Creates a new view in the database using the given query."""
         schema: str | None
         if self.schema is not None and len(self.schema.split(".")) > 1:
@@ -68,7 +66,7 @@ class TableFactory:
 # -------------------------------------------------------------------------------------------------
 
 
-class _DropView(DDLElement):
+class _DropView(sa.DDLElement):
     def __init__(self, name: str):
         self.name = name
 
@@ -85,8 +83,8 @@ def visit_drop_view(  # noqa
 # -------------------------------------------------------------------------------------------------
 
 
-class _CreateView(DDLElement):
-    def __init__(self, name: str, select: selectable.Select):
+class _CreateView(sa.DDLElement):
+    def __init__(self, name: str, select: sa.Select):
         self.name = name
         self.select = select
 

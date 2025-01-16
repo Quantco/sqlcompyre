@@ -9,8 +9,6 @@ from typing import Any
 
 import pytest
 import sqlalchemy as sa
-from sqlalchemy import Column, Integer
-from sqlalchemy.engine import Engine
 
 import sqlcompyre as sc
 from tests._shared import TableFactory
@@ -20,11 +18,11 @@ from tests._shared import TableFactory
 # -------------------------------------------------------------------------------------------------
 
 
-def table_columns() -> list[Column]:
+def table_columns() -> list[sa.Column]:
     return [
-        Column("id", Integer(), primary_key=True),
-        Column("value", Integer(), nullable=True),
-        Column("value_1", Integer(), nullable=True),
+        sa.Column("id", sa.Integer(), primary_key=True),
+        sa.Column("value", sa.Integer(), nullable=True),
+        sa.Column("value_1", sa.Integer(), nullable=True),
     ]
 
 
@@ -52,7 +50,7 @@ def anonymous_table_rhs(table_factory: TableFactory) -> sa.Table:
 
 
 def test_column_matches_percentages_different(
-    engine: Engine,
+    engine: sa.Engine,
     table_students_modified_1: sa.Table,
     table_students_modified_2: sa.Table,
 ):
@@ -64,7 +62,7 @@ def test_column_matches_percentages_different(
 
 
 def test_column_matches_percentages_different_dbs(
-    engine: Engine,
+    engine: sa.Engine,
     table_students_modified_1: sa.Table,
     table_students_modified_2: sa.Table,
 ):
@@ -75,7 +73,7 @@ def test_column_matches_percentages_different_dbs(
     assert math.isclose(column_matches.fraction_same["age"], 2 / 3, rel_tol=1e-6)
 
 
-def test_column_matches_percentages_same(engine: Engine, table_students: sa.Table):
+def test_column_matches_percentages_same(engine: sa.Engine, table_students: sa.Table):
     column_matches = sc.compare_tables(
         engine, table_students, table_students
     ).column_matches
@@ -84,7 +82,7 @@ def test_column_matches_percentages_same(engine: Engine, table_students: sa.Tabl
 
 
 def test_column_matches_percentages_same_selects(
-    engine: Engine, table_students: sa.Table
+    engine: sa.Engine, table_students: sa.Table
 ):
     column_matches = sc.compare_tables(
         engine, table_students, table_students
@@ -97,7 +95,7 @@ def test_column_matches_percentages_same_selects(
 
 
 def test_column_matches_anonymous_table_column_naming(
-    engine: Engine, anonymous_table_lhs: sa.Table, anonymous_table_rhs: sa.Table
+    engine: sa.Engine, anonymous_table_lhs: sa.Table, anonymous_table_rhs: sa.Table
 ):
     column_matches = sc.compare_tables(
         engine, anonymous_table_lhs, anonymous_table_rhs

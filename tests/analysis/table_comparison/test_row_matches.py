@@ -5,23 +5,22 @@
 
 import pandas as pd
 import sqlalchemy as sa
-from sqlalchemy.engine import Engine
 
 import sqlcompyre as sc
 
 
-def test_row_matches_same_n_matched(engine: Engine, table_students: sa.Table):
+def test_row_matches_same_n_matched(engine: sa.Engine, table_students: sa.Table):
     row_matches = sc.compare_tables(engine, table_students, table_students).row_matches
     assert row_matches.n_joined_equal == 5
     assert row_matches.n_joined_unequal == 0
 
 
-def test_row_matches_same_n_unjoined(engine: Engine, table_students: sa.Table):
+def test_row_matches_same_n_unjoined(engine: sa.Engine, table_students: sa.Table):
     row_matches = sc.compare_tables(engine, table_students, table_students).row_matches
     assert row_matches.n_unjoined_left == row_matches.n_unjoined_right == 0
 
 
-def test_row_matches_same_unjoined(engine: Engine, table_students: sa.Table):
+def test_row_matches_same_unjoined(engine: sa.Engine, table_students: sa.Table):
     comp = sc.compare_tables(engine, table_students, table_students)
     with engine.connect() as conn:
         left_res = conn.execute(comp.row_matches.unjoined_left).all()
@@ -29,7 +28,7 @@ def test_row_matches_same_unjoined(engine: Engine, table_students: sa.Table):
     assert left_res == right_res == []
 
 
-def test_row_matches_same_joined(engine: Engine, table_students: sa.Table):
+def test_row_matches_same_joined(engine: sa.Engine, table_students: sa.Table):
     comp = sc.compare_tables(engine, table_students, table_students)
     with engine.connect() as conn:
         joined_unequal_res = conn.execute(comp.row_matches.joined_unequal).all()
@@ -40,7 +39,7 @@ def test_row_matches_same_joined(engine: Engine, table_students: sa.Table):
 
 
 def test_row_matches_n_different_unjoined(
-    engine: Engine,
+    engine: sa.Engine,
     table_students_modified_1: sa.Table,
     table_students_modified_2: sa.Table,
 ):
@@ -51,7 +50,7 @@ def test_row_matches_n_different_unjoined(
 
 
 def test_row_matches_n_different_joined(
-    engine: Engine,
+    engine: sa.Engine,
     table_students_modified_1: sa.Table,
     table_students_modified_2: sa.Table,
 ):
@@ -63,7 +62,7 @@ def test_row_matches_n_different_joined(
 
 
 def test_row_matches_different_unjoined(
-    engine: Engine,
+    engine: sa.Engine,
     table_students_modified_1: sa.Table,
     table_students_modified_2: sa.Table,
 ):
@@ -77,7 +76,7 @@ def test_row_matches_different_unjoined(
 
 
 def test_row_matches_different_joined(
-    engine: Engine,
+    engine: sa.Engine,
     table_students_modified_1: sa.Table,
     table_students_modified_2: sa.Table,
 ):
@@ -94,7 +93,7 @@ def test_row_matches_different_joined(
 
 
 def test_row_matches_unjoined_columns(
-    engine: Engine, table_students: sa.Table, table_students_small: sa.Table
+    engine: sa.Engine, table_students: sa.Table, table_students_small: sa.Table
 ):
     # Check that selects on unjoined rows only contain columns of corresponding table
     row_matches = sc.compare_tables(
@@ -110,7 +109,7 @@ def test_row_matches_unjoined_columns(
 
 
 def test_row_matches_unjoined_columns_mapped(
-    engine: Engine, table_students: sa.Table, table_students_renamed: sa.Table
+    engine: sa.Engine, table_students: sa.Table, table_students_renamed: sa.Table
 ):
     # Check that selects on unjoined rows only contain columns of corresponding table even if
     # column names are mapped
@@ -129,7 +128,7 @@ def test_row_matches_unjoined_columns_mapped(
     assert set(unjoined_right.columns) == {"id_v2", "name_v2", "age_v2", "gpa_v2"}
 
 
-def test_row_matches_column_names(engine: Engine, table_students: sa.Table):
+def test_row_matches_column_names(engine: sa.Engine, table_students: sa.Table):
     row_matches = sc.compare_tables(engine, table_students, table_students).row_matches
     equal = pd.read_sql(row_matches.joined_equal, con=engine)
 
@@ -146,7 +145,7 @@ def test_row_matches_column_names(engine: Engine, table_students: sa.Table):
 
 
 def test_row_matches_float_precision(
-    engine: Engine, table_students: sa.Table, table_students_modified_3: sa.Table
+    engine: sa.Engine, table_students: sa.Table, table_students_modified_3: sa.Table
 ):
     row_matches_1 = sc.compare_tables(
         engine, table_students, table_students_modified_3

@@ -5,8 +5,6 @@ from typing import Any
 
 import pytest
 import sqlalchemy as sa
-from sqlalchemy import Column, Integer
-from sqlalchemy.engine import Engine
 
 import sqlcompyre as sc
 from tests._shared import TableFactory
@@ -16,8 +14,8 @@ from tests._shared import TableFactory
 # -------------------------------------------------------------------------------------------------
 
 
-def table_columns() -> list[Column]:
-    return [Column("id", Integer())]
+def table_columns() -> list[sa.Column]:
+    return [sa.Column("id", sa.Integer())]
 
 
 @pytest.fixture(scope="module")
@@ -49,46 +47,46 @@ def table_with_duplicates_2(table_factory: TableFactory) -> sa.Table:
 # -------------------------------------------------------------------------------------------------
 
 
-def test_equal_ok(engine: Engine, table_students: sa.Table):
+def test_equal_ok(engine: sa.Engine, table_students: sa.Table):
     comparison = sc.compare_tables(engine, table_students, table_students)
     assert comparison.equal
 
 
 def test_equal_err_count(
-    engine: Engine, table_students: sa.Table, table_students_small: sa.Table
+    engine: sa.Engine, table_students: sa.Table, table_students_small: sa.Table
 ):
     comparison = sc.compare_tables(engine, table_students, table_students_small)
     assert not comparison.equal
 
 
 def test_equal_err_columns(
-    engine: Engine, table_students: sa.Table, table_students_narrow: sa.Table
+    engine: sa.Engine, table_students: sa.Table, table_students_narrow: sa.Table
 ):
     comparison = sc.compare_tables(engine, table_students, table_students_narrow)
     assert not comparison.equal
 
 
 def test_equal_err_joined_unequal(
-    engine: Engine, table_students: sa.Table, table_students_modified_3: sa.Table
+    engine: sa.Engine, table_students: sa.Table, table_students_modified_3: sa.Table
 ):
     comparison = sc.compare_tables(engine, table_students, table_students_modified_3)
     assert not comparison.equal
 
 
-def test_equal_ok_no_join_columns_null(engine: Engine, table_with_null_1: sa.Table):
+def test_equal_ok_no_join_columns_null(engine: sa.Engine, table_with_null_1: sa.Table):
     comparison = sc.compare_tables(engine, table_with_null_1, table_with_null_1)
     assert comparison.equal
 
 
 def test_equal_err_no_join_columns_null(
-    engine: Engine, table_with_null_1: sa.Table, table_with_null_2: sa.Table
+    engine: sa.Engine, table_with_null_1: sa.Table, table_with_null_2: sa.Table
 ):
     comparison = sc.compare_tables(engine, table_with_null_1, table_with_null_2)
     assert not comparison.equal
 
 
 def test_equal_ok_no_join_columns_duplicates(
-    engine: Engine, table_with_duplicates_1: sa.Table
+    engine: sa.Engine, table_with_duplicates_1: sa.Table
 ):
     comparison = sc.compare_tables(
         engine, table_with_duplicates_1, table_with_duplicates_1
@@ -97,7 +95,9 @@ def test_equal_ok_no_join_columns_duplicates(
 
 
 def test_equal_err_no_join_columns_duplicates(
-    engine: Engine, table_with_duplicates_1: sa.Table, table_with_duplicates_2: sa.Table
+    engine: sa.Engine,
+    table_with_duplicates_1: sa.Table,
+    table_with_duplicates_2: sa.Table,
 ):
     comparison = sc.compare_tables(
         engine, table_with_duplicates_1, table_with_duplicates_2

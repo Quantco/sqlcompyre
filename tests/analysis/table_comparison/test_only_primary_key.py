@@ -8,8 +8,6 @@ from typing import Any
 
 import pytest
 import sqlalchemy as sa
-from sqlalchemy import Column, Integer
-from sqlalchemy.engine import Engine
 
 import sqlcompyre as sc
 from tests._shared import TableFactory
@@ -19,8 +17,8 @@ from tests._shared import TableFactory
 # -------------------------------------------------------------------------------------------------
 
 
-def table_columns() -> list[Column]:
-    return [Column("id", Integer(), primary_key=True)]
+def table_columns() -> list[sa.Column]:
+    return [sa.Column("id", sa.Integer(), primary_key=True)]
 
 
 @pytest.fixture(scope="module")
@@ -40,7 +38,9 @@ def table_rhs(table_factory: TableFactory) -> sa.Table:
 # -------------------------------------------------------------------------------------------------
 
 
-def test_only_pk_row_matches(engine: Engine, table_lhs: sa.Table, table_rhs: sa.Table):
+def test_only_pk_row_matches(
+    engine: sa.Engine, table_lhs: sa.Table, table_rhs: sa.Table
+):
     row_matches = sc.compare_tables(engine, table_lhs, table_rhs).row_matches
     assert row_matches.n_joined_equal == 2
     assert row_matches.n_joined_unequal == 0

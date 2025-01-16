@@ -5,7 +5,6 @@ from datetime import datetime
 
 import sqlalchemy as sa
 from sqlalchemy.dialects.mssql import dialect as SqlAlchemyMssqlDialect  # noqa: N812
-from sqlalchemy.engine import Engine
 
 from ._base import DialectProtocol
 
@@ -22,7 +21,7 @@ class MssqlDialect(SqlAlchemyMssqlDialect, DialectProtocol):  # type: ignore
     views_support_notnull_columns: bool = True
 
     def get_table_creation_timestamps(
-        self, engine: Engine, tables: list[sa.Table]
+        self, engine: sa.Engine, tables: list[sa.Table]
     ) -> list[datetime]:
         # Potentially, we need to get the database from the tables
         db: str | None = None

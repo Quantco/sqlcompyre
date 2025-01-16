@@ -7,13 +7,12 @@ comparisons."""
 import pandas as pd
 import pytest
 import sqlalchemy as sa
-from sqlalchemy.engine import Engine
 
 import sqlcompyre as sc
 
 
 def test_name_verification(
-    engine: Engine,
+    engine: sa.Engine,
     table_students: sa.Table,
     table_students_renamed: sa.Table,
 ):
@@ -32,7 +31,7 @@ def test_name_verification(
 
 
 def test_name_verification_right_arbitrary_casing(
-    engine: Engine,
+    engine: sa.Engine,
     table_students: sa.Table,
     table_students_renamed: sa.Table,
 ):
@@ -50,7 +49,7 @@ def test_name_verification_right_arbitrary_casing(
 
 
 def test_arbitrary_name_casing(
-    engine: Engine,
+    engine: sa.Engine,
     table_students: sa.Table,
     table_students_renamed: sa.Table,
 ):
@@ -78,7 +77,7 @@ def test_arbitrary_name_casing(
 
 
 def test_partly_renaming(
-    engine: Engine,
+    engine: sa.Engine,
     table_students: sa.Table,
     table_students_partly_renamed: sa.Table,
 ):
@@ -110,7 +109,7 @@ def test_partly_renaming(
 
 
 def test_automatic_case_matching(
-    engine: Engine, table_students: sa.Table, table_students_cased: sa.Table
+    engine: sa.Engine, table_students: sa.Table, table_students_cased: sa.Table
 ):
     with pytest.raises(ValueError):
         # Fail when not ignoring casing
@@ -128,7 +127,7 @@ def test_automatic_case_matching(
 
 
 def test_row_matches_different_unmatched_cols(
-    engine: Engine,
+    engine: sa.Engine,
     table_students_modified_1: sa.Table,
     table_students_renamed: sa.Table,
 ):
@@ -142,7 +141,7 @@ def test_row_matches_different_unmatched_cols(
 
 
 def test_row_matches_different_matched_cols(
-    engine: Engine,
+    engine: sa.Engine,
     table_students_modified_1: sa.Table,
     table_students_renamed: sa.Table,
 ):
@@ -157,7 +156,7 @@ def test_row_matches_different_matched_cols(
 
 
 def test_column_matches_percentages_different_dbs_cols(
-    engine: Engine,
+    engine: sa.Engine,
     table_students_modified_1: sa.Table,
     table_students_renamed: sa.Table,
 ):
@@ -172,7 +171,7 @@ def test_column_matches_percentages_different_dbs_cols(
 
 
 def test_column_matches_percentages_selects(
-    engine: Engine,
+    engine: sa.Engine,
     table_students_modified_1: sa.Table,
     table_students_renamed: sa.Table,
 ):

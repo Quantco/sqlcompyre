@@ -5,7 +5,6 @@ import copy
 
 import pytest
 import sqlalchemy as sa
-from sqlalchemy import Column, Float, Integer, String
 
 from tests._shared import TableFactory
 
@@ -18,39 +17,39 @@ STUDENT_DATA = [
 ]
 
 
-def base_columns() -> list[Column]:
+def base_columns() -> list[sa.Column]:
     return [
-        Column("id", Integer(), primary_key=True),
-        Column("name", String(length=50)),
-        Column("age", Integer()),
-        Column("gpa", Float()),
+        sa.Column("id", sa.Integer(), primary_key=True),
+        sa.Column("name", sa.String(length=50)),
+        sa.Column("age", sa.Integer()),
+        sa.Column("gpa", sa.Float()),
     ]
 
 
-def alt_columns() -> list[Column]:
+def alt_columns() -> list[sa.Column]:
     return [
-        Column("id_v2", Integer(), primary_key=True),
-        Column("name_v2", String(length=50)),
-        Column("age_v2", Integer()),
-        Column("gpa_v2", Float()),
+        sa.Column("id_v2", sa.Integer(), primary_key=True),
+        sa.Column("name_v2", sa.String(length=50)),
+        sa.Column("age_v2", sa.Integer()),
+        sa.Column("gpa_v2", sa.Float()),
     ]
 
 
-def alt_columns_small() -> list[Column]:
+def alt_columns_small() -> list[sa.Column]:
     return [
-        Column("id", Integer(), primary_key=True),
-        Column("name", String(length=50)),
-        Column("age_v2", Integer()),
-        Column("gpa_v2", Float()),
+        sa.Column("id", sa.Integer(), primary_key=True),
+        sa.Column("name", sa.String(length=50)),
+        sa.Column("age_v2", sa.Integer()),
+        sa.Column("gpa_v2", sa.Float()),
     ]
 
 
-def cased_columns() -> list[Column]:
+def cased_columns() -> list[sa.Column]:
     return [
-        Column("Id", Integer(), primary_key=True),
-        Column("Name", String(length=50)),
-        Column("Age", Integer()),
-        Column("Gpa", Float()),
+        sa.Column("Id", sa.Integer(), primary_key=True),
+        sa.Column("Name", sa.String(length=50)),
+        sa.Column("Age", sa.Integer()),
+        sa.Column("Gpa", sa.Float()),
     ]
 
 

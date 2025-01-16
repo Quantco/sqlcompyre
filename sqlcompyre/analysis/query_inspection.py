@@ -5,7 +5,6 @@
 from functools import cached_property, lru_cache
 
 import sqlalchemy as sa
-from sqlalchemy.engine import Engine
 
 
 class QueryInspection:
@@ -16,7 +15,7 @@ class QueryInspection:
         or :meth:`~sqlcompyre.api.inspect_table` functions instead.
     """
 
-    def __init__(self, engine: Engine, selectable: sa.Select):
+    def __init__(self, engine: sa.Engine, selectable: sa.Select):
         """
         Args:
             engine: The engine to use for connecting to the database.

@@ -5,31 +5,30 @@
 matches."""
 
 import sqlalchemy as sa
-from sqlalchemy.engine import Engine
 
 import sqlcompyre as sc
 
 
-def test_column_names_equal_same_names(engine: Engine, table_students: sa.Table):
+def test_column_names_equal_same_names(engine: sa.Engine, table_students: sa.Table):
     # Check that column names are matched in two identical tables
     comparison = sc.compare_tables(engine, table_students, table_students)
     assert comparison.column_names.equal
 
 
-def test_column_names_equal_missing_1(engine: Engine, table_students: sa.Table):
+def test_column_names_equal_missing_1(engine: sa.Engine, table_students: sa.Table):
     # Check that there are no missing columns in two identical tables
     comparison = sc.compare_tables(engine, table_students, table_students)
     assert not comparison.column_names.missing_left
 
 
-def test_column_names_equal_missing_2(engine: Engine, table_students: sa.Table):
+def test_column_names_equal_missing_2(engine: sa.Engine, table_students: sa.Table):
     # Check that there are no missing columns in two identical tables
     comparison = sc.compare_tables(engine, table_students, table_students)
     assert not comparison.column_names.missing_right
 
 
 def test_column_names_unequal_same_names(
-    engine: Engine,
+    engine: sa.Engine,
     table_students: sa.Table,
     table_students_narrow: sa.Table,
 ):
@@ -39,7 +38,7 @@ def test_column_names_unequal_same_names(
 
 
 def test_column_names_unequal_missing_1(
-    engine: Engine,
+    engine: sa.Engine,
     table_students: sa.Table,
     table_students_narrow: sa.Table,
 ):
@@ -49,7 +48,7 @@ def test_column_names_unequal_missing_1(
 
 
 def test_column_names_unequal_missing_2(
-    engine: Engine,
+    engine: sa.Engine,
     table_students: sa.Table,
     table_students_narrow: sa.Table,
 ):

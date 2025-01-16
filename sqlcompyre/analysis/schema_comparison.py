@@ -6,8 +6,7 @@ import re
 from functools import cached_property
 from typing import Literal, cast
 
-from sqlalchemy import schema
-from sqlalchemy.engine import Engine
+import sqlalchemy as sa
 from tqdm.auto import tqdm
 
 from sqlcompyre.report import Report
@@ -27,11 +26,11 @@ class SchemaComparison:
 
     def __init__(
         self,
-        engine: Engine,
+        engine: sa.Engine,
         left_schema: str,
         right_schema: str,
-        left_tables: dict[str, schema.Table],
-        right_tables: dict[str, schema.Table],
+        left_tables: dict[str, sa.Table],
+        right_tables: dict[str, sa.Table],
         float_precision: float,
         collation: str | None,
         ignore_casing: bool,

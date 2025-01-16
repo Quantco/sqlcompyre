@@ -5,7 +5,6 @@
 
 import pytest
 import sqlalchemy as sa
-from sqlalchemy.engine import Engine
 
 import sqlcompyre as sc
 
@@ -17,7 +16,7 @@ def expected_description() -> str:
 
 
 def test_report_simple(
-    engine: Engine,
+    engine: sa.Engine,
     table_students_modified_1: sa.Table,
     table_students_modified_2: sa.Table,
     expected_description: str,

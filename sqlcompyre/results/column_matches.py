@@ -3,7 +3,7 @@
 
 from dataclasses import dataclass
 
-from sqlalchemy.sql import selectable
+import sqlalchemy as sa
 
 
 @dataclass
@@ -15,4 +15,4 @@ class ColumnMatches:
     fraction_same: dict[str, float]
     #: Dictionary mapping the name of the left-table column to a query of all joined rows for
     #: which the column does not have the same value in both tables.
-    mismatch_selects: dict[str, selectable.Select]
+    mismatch_selects: dict[str, sa.Select]
