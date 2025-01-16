@@ -1,10 +1,9 @@
-# Copyright (c) QuantCo 2024-2024
+# Copyright (c) QuantCo 2024-2025
 # SPDX-License-Identifier: BSD-3-Clause
 
 import functools
 import logging
 from functools import cached_property
-from typing import cast
 
 import sqlalchemy as sa
 import sqlalchemy.sql.functions as func
