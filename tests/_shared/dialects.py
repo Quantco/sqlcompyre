@@ -36,6 +36,6 @@ def dialect_from_connection_url(conn_url: sa.URL) -> DialectProtocol:
         case "duckdb":
             from sqlcompyre.analysis.dialects import DuckDBDialect
 
-            return DuckDBDialect()
+            return DuckDBDialect()  # type: ignore
         case _:
             raise NotImplementedError
