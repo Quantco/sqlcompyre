@@ -18,7 +18,7 @@ from tests._shared import TableFactory
 
 
 def table_columns() -> list[sa.Column]:
-    return [sa.Column("id", sa.Integer(), primary_key=True)]
+    return [sa.Column("id", sa.Integer(), primary_key=True, autoincrement=False)]
 
 
 @pytest.fixture(scope="module")

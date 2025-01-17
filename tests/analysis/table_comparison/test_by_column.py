@@ -20,7 +20,7 @@ from tests._shared import TableFactory
 
 def table_columns() -> list[sa.Column]:
     return [
-        sa.Column("id", sa.Integer(), primary_key=True),
+        sa.Column("id", sa.Integer(), primary_key=True, autoincrement=False),
         sa.Column("value", sa.Integer(), nullable=True),
         sa.Column("value_1", sa.Integer(), nullable=True),
     ]

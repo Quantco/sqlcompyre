@@ -37,3 +37,18 @@ try:
     )
 except ImportError:
     pass
+
+# -------------------------------------------------------------------------------------------------
+# DuckDB
+# -------------------------------------------------------------------------------------------------
+
+try:
+    from .duckdb import DuckDBDialect  # noqa
+
+    registry.register(
+        "duckdb",
+        "sqlcompyre.analysis.dialects",
+        "DuckDBDialect",
+    )
+except ImportError:
+    pass

@@ -33,5 +33,9 @@ def dialect_from_connection_url(conn_url: sa.URL) -> DialectProtocol:
             from sqlcompyre.analysis.dialects import SQLiteDialect
 
             return SQLiteDialect()
+        case "duckdb":
+            from sqlcompyre.analysis.dialects import DuckDBDialect
+
+            return DuckDBDialect()
         case _:
             raise NotImplementedError

@@ -19,7 +19,7 @@ from tests._shared import TableFactory
 
 def table_columns(engine: sa.Engine) -> list[sa.Column]:
     return [
-        sa.Column("id", sa.Integer(), primary_key=True),
+        sa.Column("id", sa.Integer(), primary_key=True, autoincrement=False),
         sa.Column(
             "value",
             sa.String(collation=engine.dialect.case_insensitive_collation),  # type: ignore
