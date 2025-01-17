@@ -1,4 +1,4 @@
-# Copyright (c) QuantCo 2024-2024
+# Copyright (c) QuantCo 2024-2025
 # SPDX-License-Identifier: BSD-3-Clause
 
 from sqlalchemy.dialects import registry
@@ -34,6 +34,21 @@ try:
         "sqlite",
         "sqlcompyre.analysis.dialects",
         "SQLiteDialect",
+    )
+except ImportError:
+    pass
+
+# -------------------------------------------------------------------------------------------------
+# DuckDB
+# -------------------------------------------------------------------------------------------------
+
+try:
+    from .duckdb import DuckDBDialect  # noqa
+
+    registry.register(
+        "duckdb",
+        "sqlcompyre.analysis.dialects",
+        "DuckDBDialect",
     )
 except ImportError:
     pass

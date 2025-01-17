@@ -19,7 +19,7 @@ STUDENT_DATA = [
 
 def base_columns() -> list[sa.Column]:
     return [
-        sa.Column("id", sa.Integer(), primary_key=True),
+        sa.Column("id", sa.Integer(), primary_key=True, autoincrement=False),
         sa.Column("name", sa.String(length=50)),
         sa.Column("age", sa.Integer()),
         sa.Column("gpa", sa.Float()),
@@ -28,7 +28,7 @@ def base_columns() -> list[sa.Column]:
 
 def alt_columns() -> list[sa.Column]:
     return [
-        sa.Column("id_v2", sa.Integer(), primary_key=True),
+        sa.Column("id_v2", sa.Integer(), primary_key=True, autoincrement=False),
         sa.Column("name_v2", sa.String(length=50)),
         sa.Column("age_v2", sa.Integer()),
         sa.Column("gpa_v2", sa.Float()),
@@ -37,7 +37,7 @@ def alt_columns() -> list[sa.Column]:
 
 def alt_columns_small() -> list[sa.Column]:
     return [
-        sa.Column("id", sa.Integer(), primary_key=True),
+        sa.Column("id", sa.Integer(), primary_key=True, autoincrement=False),
         sa.Column("name", sa.String(length=50)),
         sa.Column("age_v2", sa.Integer()),
         sa.Column("gpa_v2", sa.Float()),
@@ -46,7 +46,7 @@ def alt_columns_small() -> list[sa.Column]:
 
 def cased_columns() -> list[sa.Column]:
     return [
-        sa.Column("Id", sa.Integer(), primary_key=True),
+        sa.Column("Id", sa.Integer(), primary_key=True, autoincrement=False),
         sa.Column("Name", sa.String(length=50)),
         sa.Column("Age", sa.Integer()),
         sa.Column("Gpa", sa.Float()),

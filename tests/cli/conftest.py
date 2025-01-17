@@ -9,13 +9,13 @@ from tests._shared import SchemaFactory, TableFactory
 
 def table_columns() -> list[sa.Column]:
     return [
-        sa.Column("id", sa.Integer(), primary_key=True),
+        sa.Column("id", sa.Integer(), primary_key=True, autoincrement=False),
         sa.Column("value", sa.Integer()),
     ]
 
 
 def table_columns_alt() -> list[sa.Column]:
-    return [sa.Column("new_id", sa.Integer(), primary_key=True)]
+    return [sa.Column("new_id", sa.Integer(), primary_key=True, autoincrement=False)]
 
 
 @pytest.fixture(scope="session")
