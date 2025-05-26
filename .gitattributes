@@ -1,3 +1,4 @@
+<<<<<<< before updating
 pixi.lock linguist-language=YAML linguist-generated=true
 
 * text=auto
@@ -6,3 +7,6 @@ pixi.lock linguist-language=YAML linguist-generated=true
 
 *.{py,yaml,yml,sh} text eol=lf
 *.bat text eol=crlf
+=======
+pixi.lock merge=binary linguist-language=YAML linguist-generated=true
+>>>>>>> after updating
