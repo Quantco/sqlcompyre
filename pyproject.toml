@@ -1,16 +1,22 @@
 [build-system]
-requires = ["setuptools", "setuptools-scm", "wheel"]
-
-[tool.setuptools_scm]
-version_scheme = "post-release"
+requires = ["hatchling"]
+build-backend = "hatchling.build"
 
 [project]
 authors = [{ name = "Oliver Borchert", email = "oliver.borchert@quantco.com" }]
+<<<<<<< before updating
+||||||| last update
+dynamic = ["version"]
+=======
+# replaced in CI
+version = "0.0.0"
+>>>>>>> after updating
 classifiers = [
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
 ]
 dependencies = [
   "click",
