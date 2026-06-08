@@ -1,13 +1,32 @@
+<<<<<<< before updating
 [project]
+||||||| last update
+[project]
+name = "sqlcompyre"
+=======
+[workspace]
+name = "sqlcompyre"
+>>>>>>> after updating
 channels = ["conda-forge"]
+<<<<<<< before updating
 name = "sqlcompyre"
 platforms = ["linux-64", "osx-64", "osx-arm64"]
+||||||| last update
+platforms = ["osx-arm64", "osx-64", "linux-64", "win-64"]
+=======
+exclude-newer = "7d"
+platforms = ["osx-arm64", "osx-64", "linux-64", "win-64"]
+preview = ["pixi-build"]
+>>>>>>> after updating
 
-[tasks]
-postinstall = "pip install --no-build-isolation --no-deps --disable-pip-version-check -e ."
-
-[dependencies]
+[package]
+name = "sqlcompyre"
+[package.build.backend]
+name = "pixi-build-python"
+version = "*"
+[package.host-dependencies]
 python = ">=3.11"
+<<<<<<< before updating
 # Dependencies
 click = "*"
 pydantic = ">=2.0"
@@ -22,7 +41,13 @@ unixodbc = "*"
 # Database Dependencies: DuckDB
 duckdb-engine = "*"
 python-duckdb = "*"
+||||||| last update
+=======
+hatchling = "*"
+uv = "*"
+>>>>>>> after updating
 
+<<<<<<< before updating
 [host-dependencies]
 pip = "*"
 setuptools = ">=61"
@@ -38,8 +63,25 @@ sphinxcontrib-apidoc = "*"
 [feature.docs.tasks]
 docs = "cd docs && make html"
 readthedocs = "rm -rf $READTHEDOCS_OUTPUT/html && cp -r docs/_build/html $READTHEDOCS_OUTPUT/html"
+||||||| last update
+[host-dependencies]
+pip = "*"
+setuptools = ">=61"
+setuptools-scm = "*"
+=======
+[dependencies]
+sqlcompyre = { path = "." }
+>>>>>>> after updating
 
 [feature.test.dependencies]
+<<<<<<< before updating
+||||||| last update
+pytest = ">=6"
+pytest-cov = "*"
+=======
+pytest = "*"
+pytest-cov = "*"
+>>>>>>> after updating
 mypy = "*"
 pandas = "*"
 polars = "*"
@@ -55,25 +97,37 @@ test = "python -m pytest"
 test-coverage = "python -m pytest --cov=sqlcompyre --cov-report=xml --cov-report=term-missing"
 
 [feature.build.dependencies]
+python = "*"
+hatchling = "*"
 python-build = "*"
-twine = "*"
-wheel = "*"
+twine = ">=6"
 [feature.build.tasks]
 build-wheel = "python -m build --no-isolation ."
 check-wheel = "twine check dist/*"
 
 [feature.lint.dependencies]
+<<<<<<< before updating
 docformatter = "*"
 insert-license-header = "*"
 pre-commit = "*"
 pre-commit-hooks = "*"
+||||||| last update
+pre-commit = "*"
+insert-license-header = "*"
+docformatter = "*"
+ruff = "*"
+=======
+lefthook = "*"
+ruff = "*"
+>>>>>>> after updating
 prettier = "*"
 ruff = "*"
 taplo = "*"
 typos = "*"
+zizmor = "*"
 [feature.lint.tasks]
-pre-commit-install = "pre-commit install"
-pre-commit-run = "pre-commit run -a"
+pre-commit-install = "lefthook install"
+lint = "lefthook run pre-commit --all-files"
 
 [feature.py311.dependencies]
 python = "3.11.*"
@@ -81,12 +135,27 @@ python = "3.11.*"
 python = "3.12.*"
 [feature.py313.dependencies]
 python = "3.13.*"
+[feature.py314.dependencies]
+python = "3.14.*"
 
 [environments]
+<<<<<<< before updating
 build = ["build"]
 default = ["test"]
 docs = ["docs"]
 lint = { features = ["lint"], no-default-feature = true }
+||||||| last update
+default = ["test"]
+=======
+default = ["test", "build", "lint"]
+>>>>>>> after updating
 py311 = ["py311", "test"]
 py312 = ["py312", "test"]
 py313 = ["py313", "test"]
+<<<<<<< before updating
+||||||| last update
+build = ["build"]
+lint = { features = ["lint"], no-default-feature = true }
+=======
+py314 = ["py314", "test"]
+>>>>>>> after updating
