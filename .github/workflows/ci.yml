@@ -13,18 +13,33 @@ permissions:
   contents: read
 
 jobs:
-  pre-commit:
+  lint:
+    name: Lint
     timeout-minutes: 30
     runs-on: ubuntu-latest
     steps:
       - name: Checkout branch
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
       - name: Set up pixi
+<<<<<<< before updating
         uses: prefix-dev/setup-pixi@a0af7a228712d6121d37aba47adf55c1332c9c2e # v0.9.4
         with:
           environments: default lint
       - name: pre-commit
         run: pixi run pre-commit-run --color=always --show-diff-on-failure
+||||||| last update
+        uses: prefix-dev/setup-pixi@19eac09b398e3d0c747adc7921926a6d802df4da # v0.8.8
+        with:
+          environments: default lint
+      - name: pre-commit
+        run: pixi run pre-commit-run --color=always --show-diff-on-failure
+=======
+        uses: prefix-dev/setup-pixi@1b2de7f3351f171c8b4dfeb558c639cb58ed4ec0 # v0.9.5
+      - name: Run linting
+        run: pixi run lint
+        env:
+          CLICOLOR_FORCE: 1
+>>>>>>> after updating
 
   pytest:
     timeout-minutes: 30
@@ -40,6 +55,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
+<<<<<<< before updating
         environment: [py311, py312, py313]
         database: [sqlite, mssql, duckdb]
         include:
@@ -49,6 +65,26 @@ jobs:
             connection-string: mssql+pyodbc://sa:Passw0rd@localhost:1433/master?driver=ODBC+Driver+18+for+SQL+Server&Encrypt=no
           - database: duckdb
             connection-string: duckdb:///test.duckdb
+||||||| last update
+        environment:
+          - py311
+          - py312
+          - py313
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+=======
+        environment:
+          - py311
+          - py312
+          - py313
+          - py314
+        os:
+          - ubuntu-latest
+          - macos-latest
+          - windows-latest
+>>>>>>> after updating
     steps:
       - name: Checkout branch
         uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
@@ -58,12 +94,24 @@ jobs:
         if: matrix.database == 'mssql'
         run: sudo ACCEPT_EULA=Y apt-get install msodbcsql18 -y
       - name: Set up pixi
+<<<<<<< before updating
         uses: prefix-dev/setup-pixi@a0af7a228712d6121d37aba47adf55c1332c9c2e # v0.9.4
+||||||| last update
+        uses: prefix-dev/setup-pixi@19eac09b398e3d0c747adc7921926a6d802df4da # v0.8.8
+=======
+        uses: prefix-dev/setup-pixi@1b2de7f3351f171c8b4dfeb558c639cb58ed4ec0 # v0.9.5
+>>>>>>> after updating
         with:
           environments: ${{ matrix.environment }}
+<<<<<<< before updating
           activate-environment: true
       - name: Install repository
         run: pixi run postinstall
+||||||| last update
+      - name: Install repository
+        run: pixi run -e ${{ matrix.environment }} postinstall
+=======
+>>>>>>> after updating
       - name: Run pytest
         run: pixi run test-coverage --color=yes
         env:
