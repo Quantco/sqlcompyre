@@ -13,7 +13,8 @@ class TableFactory:
     """Simple utility class to create tables for testing."""
 
     def __init__(self, engine: sa.Engine, schema: str | None):
-        """
+        """Initialize the instance.
+
         Args:
             engine: The engine to interact with the database.
             schema: The schema to create tables in or None if tables should be created in the

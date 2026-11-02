@@ -18,7 +18,8 @@ class Report:
         description: str | None,
         sections: dict[str, Any],
     ):
-        """
+        """Initialize the instance.
+
         Args:
             object_type: The type of object that the report summarizes the comparison for.
             object_1: The name of the first object from the comparison.

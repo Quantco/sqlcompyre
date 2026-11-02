@@ -8,8 +8,7 @@ import sqlalchemy as sa
 
 
 class DialectProtocol(Protocol):
-    """This class is to be used to ensure that a dialect implements all required methods
-    & functionality to work within SQLCompyre.
+    """This class is to be used to ensure that a dialect implements all required methods & functionality to work within SQLCompyre.
 
     A dialect is essentially a collection of database-related functions that differ between
     database management systems. :class:`~sqlcompyre.analysis.table_comparison.TableComparison`

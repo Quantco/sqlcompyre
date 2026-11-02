@@ -15,8 +15,7 @@ class Formatter(ABC):
     @property
     @abstractmethod
     def file_extension(self) -> str:
-        """The file extension to use when this formatter's output is written to a
-        file."""
+        """The file extension to use when this formatter's output is written to a file."""
 
     @abstractmethod
     def format(

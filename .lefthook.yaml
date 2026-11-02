@@ -13,6 +13,9 @@ pre-commit:
     - group:
         parallel: true
         jobs:
+          - name: insert-license
+            glob: "*.py"
+            run: pixi {run} insert-license --license-base64 Q29weXJpZ2h0IChjKSBRdWFudENvIDIwMjQtMjAyNApTUERYLUxpY2Vuc2UtSWRlbnRpZmllcjogQlNELTMtQ2xhdXNl --dynamic-years --comment-style "#" {staged_files}
           - name: ruff-check
             glob: "*.{py,pyi}"
             run: pixi {run} ruff check --fix --exit-non-zero-on-fix --force-exclude

@@ -51,14 +51,7 @@ git clone https://github.com/quantco/sqlcompyre
 cd sqlcompyre
 
 pixi run pre-commit-install
-<<<<<<< before updating
-pixi run postinstall
-||||||| last update
-pixi run postinstall
 pixi run test
-=======
-pixi run test
->>>>>>> after updating
 ```
 
 ### Running Tests Locally

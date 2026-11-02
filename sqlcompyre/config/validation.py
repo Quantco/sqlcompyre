@@ -11,8 +11,7 @@ from .model import Config
 
 
 def read_config(file_path: Path) -> Config:
-    """Reads in the yaml configuration file from the given path and parse it into Config
-    object ensuring the validity of the configuration file.
+    """Reads in the yaml configuration file from the given path and parse it into Config object ensuring the validity of the configuration file.
 
     Args:
         file_path: File of the yaml configuration to parse

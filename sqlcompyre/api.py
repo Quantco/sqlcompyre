@@ -25,7 +25,7 @@ def inspect(engine: sa.Engine, query: sa.Select | sa.FromClause) -> QueryInspect
         A query inspection object that can be used to easily gain insights into the query
         result.
 
-    See also:
+    See Also:
         :meth:`inspect_table` if you want to inspect the results of ``SELECT * FROM table`` and
         specify the table as a string.
     """
@@ -47,7 +47,7 @@ def inspect_table(engine: sa.Engine, table: sa.Table | str) -> QueryInspection:
     Returns:
         A query inspection object that can be used to easily gain insights into the table.
 
-    See also:
+    See Also:
         :meth:`inspect` if you want to inspect only a subset of a table or have a
         :class:`sqlalchemy.Table` object. This method should preferably only be used when
         specifying the table name as a string.
@@ -157,9 +157,7 @@ def compare_schemas(
     collation: str | None = None,
     ignore_casing: bool = False,
 ) -> SchemaComparison:
-    """Compare all tables from two schemas in the database. For multi-part schemas (e.g.
-    for MSSQL), it is possible to only specify the first part of the schema and compare
-    tables from all schemas. In MSSQL, this allows comparing entire databases.
+    """Compare all tables from two schemas in the database. For multi-part schemas (e.g. for MSSQL), it is possible to only specify the first part of the schema and compare tables from all schemas. In MSSQL, this allows comparing entire databases.
 
     Currently, the comparison only compares tables with the same name (and the same schema for
     multi-part schema comparisons).

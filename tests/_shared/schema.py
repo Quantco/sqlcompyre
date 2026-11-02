@@ -12,7 +12,8 @@ class SchemaFactory:
     """Simple utility class to create schemas for testing."""
 
     def __init__(self, connection_url: sa.URL):
-        """
+        """Initialize the instance.
+
         Args:
             connection_url: The connection string to connect to the database.
         """
@@ -20,8 +21,7 @@ class SchemaFactory:
         self.dialect = dialect_from_connection_url(connection_url)
 
     def create(self, name: str) -> str:
-        """Create a new schema with the given name and drop a potentially existing
-        one."""
+        """Create a new schema with the given name and drop a potentially existing one."""
         if not self.dialect.supports_schemas:
             raise ValueError(f"dialect '{self.dialect.name}' has no concept of schemas")
 

@@ -18,7 +18,8 @@ class TerminalFormatter(Formatter):
     """Formatter for printing reports to the terminal."""
 
     def __init__(self, colored: bool = True):
-        """
+        """Initialize the instance.
+
         Args:
             colored: Whether the report should be colored.
         """

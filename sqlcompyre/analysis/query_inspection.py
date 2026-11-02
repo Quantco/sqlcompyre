@@ -19,7 +19,8 @@ class QueryInspection:
     """
 
     def __init__(self, engine: sa.Engine, query: sa.FromClause):
-        """
+        """Initialize the instance.
+
         Args:
             engine: The engine to use for connecting to the database.
             query: The query whose results to inspect.
@@ -46,7 +47,6 @@ class QueryInspection:
         Returns:
             The number of distinct rows.
         """
-
         if len(columns) == 0:
             data_query = sa.select(self.query).distinct()
 

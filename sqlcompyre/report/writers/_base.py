@@ -11,7 +11,8 @@ class Writer(ABC):
     """Abstract base class for writers of reports."""
 
     def __init__(self, formatter: Formatter):
-        """
+        """Initialize the instance.
+
         Args:
             formatter: The formatter to use for rendering reports.
         """

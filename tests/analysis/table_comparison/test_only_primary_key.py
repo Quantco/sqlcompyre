@@ -1,8 +1,7 @@
 # Copyright (c) QuantCo 2024-2025
 # SPDX-License-Identifier: BSD-3-Clause
 
-"""This file contains tests that verify SQLCompyre's behavior when tables contain only
-primary keys."""
+"""This file contains tests that verify SQLCompyre's behavior when tables contain only primary keys."""
 
 from typing import Any
 

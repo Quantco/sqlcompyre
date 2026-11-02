@@ -1,21 +1,12 @@
-
-
 [project]
 authors = [{ name = "Oliver Borchert", email = "oliver.borchert@quantco.com" }]
-<<<<<<< before updating
-||||||| last update
-dynamic = ["version"]
-=======
 # replaced in CI
 version = "0.0.0"
->>>>>>> after updating
 classifiers = [
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
-  "Programming Language :: Python :: 3.14",
-  "Programming Language :: Python :: 3.15",
 ]
 dependencies = [
   "click",
@@ -26,7 +17,6 @@ dependencies = [
   "tqdm",
 ]
 description = "Tool for comparing and inspecting data in SQL databases."
-dynamic = ["version"]
 name = "sqlcompyre"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -34,15 +24,11 @@ requires-python = ">=3.11"
 [project.urls]
 repository = "https://github.com/quantco/sqlcompyre"
 
-[tool.setuptools.packages.find]
-include = ["sqlcompyre"]
-namespaces = false
-
 [project.scripts]
 compyre = "sqlcompyre.cli.__main__:main"
 
-[tool.docformatter]
-black = true
+["sqlcompyre"]
+namespaces = false
 
 [tool.black]
 exclude = '''
@@ -57,44 +43,6 @@ exclude = '''
 
 [tool.ruff]
 line-length = 88
-
-[tool.ruff.lint]
-ignore = [
-  "E501", # https://docs.astral.sh/ruff/faq/#is-the-ruff-linter-compatible-with-black
-  "N803", # https://docs.astral.sh/ruff/rules/invalid-argument-name
-  "N806", # https://docs.astral.sh/ruff/rules/non-lowercase-variable-in-function
-]
-select = [
-  # pyflakes
-  "F",
-  # pycodestyle
-  "E",
-  "W",
-  # isort
-  "I",
-  # pep8-naming
-  "N",
-  # pyupgrade
-  "UP",
-]
-
-[tool.mypy]
-check_untyped_defs = true
-exclude = ["docs/"]
-ignore_missing_imports = true
-no_implicit_optional = true
-python_version = "3.11"
-
-# If you run into `missing library stubs or py.typed marker` errors
-# and no stubs are available for this library, you can add an override
-# to ignore the missing imports.
-# [[tool.mypy.overrides]]
-# module = ["my_module"]
-# ignore_missing_imports = true
-
-[build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
 
 [tool.ruff.lint]
 ignore = [
@@ -122,6 +70,20 @@ select = [
 [tool.ruff.lint.pydocstyle]
 convention = "google"
 
+[tool.mypy]
+check_untyped_defs = true
+exclude = ["docs/"]
+ignore_missing_imports = true
+no_implicit_optional = true
+python_version = "3.11"
+
+# If you run into `missing library stubs or py.typed marker` errors
+# and no stubs are available for this library, you can add an override
+# to ignore the missing imports.
+# [[tool.mypy.overrides]]
+# module = ["my_module"]
+# ignore_missing_imports = true
+
 [tool.tombi]
 schema.enabled = false
 
@@ -132,3 +94,7 @@ filterwarnings = [
 ]
 markers = ["skip_dialect(dialect): skip this test for a certain dialect"]
 testpaths = ["tests"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

@@ -14,7 +14,8 @@ class Names:
         name_mapping: dict[str, str] | None,
         ignore_casing: bool,
     ):
-        """
+        """Initialize the instance.
+
         Args:
             left: Names from the "left" database object.
             right: Names from the "right" database object.
