@@ -8,7 +8,7 @@ from ._base import Formatter
 
 F = TypeVar("F", bound=Formatter)
 
-_FORMATTERS = {}
+_FORMATTERS: dict[str, type[Formatter]] = {}
 
 
 def register(name: str) -> Callable[[type[F]], type[F]]:

@@ -9,7 +9,7 @@ from ._base import Writer
 
 F = TypeVar("F", bound=Writer)
 
-_WRITERS = {}
+_WRITERS: dict[str, type[Writer]] = {}
 
 
 def register(name: str) -> Callable[[type[F]], type[F]]:
