@@ -1,16 +1,21 @@
-[build-system]
-requires = ["setuptools", "setuptools-scm", "wheel"]
 
-[tool.setuptools_scm]
-version_scheme = "post-release"
 
 [project]
 authors = [{ name = "Oliver Borchert", email = "oliver.borchert@quantco.com" }]
+<<<<<<< before updating
+||||||| last update
+dynamic = ["version"]
+=======
+# replaced in CI
+version = "0.0.0"
+>>>>>>> after updating
 classifiers = [
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.11",
   "Programming Language :: Python :: 3.12",
   "Programming Language :: Python :: 3.13",
+  "Programming Language :: Python :: 3.14",
+  "Programming Language :: Python :: 3.15",
 ]
 dependencies = [
   "click",
@@ -78,7 +83,7 @@ check_untyped_defs = true
 exclude = ["docs/"]
 ignore_missing_imports = true
 no_implicit_optional = true
-python_version = '3.11'
+python_version = "3.11"
 
 # If you run into `missing library stubs or py.typed marker` errors
 # and no stubs are available for this library, you can add an override
@@ -86,6 +91,39 @@ python_version = '3.11'
 # [[tool.mypy.overrides]]
 # module = ["my_module"]
 # ignore_missing_imports = true
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.ruff.lint]
+ignore = [
+  "N803",  # https://docs.astral.sh/ruff/rules/invalid-argument-name
+  "N806",  # https://docs.astral.sh/ruff/rules/non-lowercase-variable-in-function
+  "E501",  # https://docs.astral.sh/ruff/faq/#is-the-ruff-linter-compatible-with-black
+  "D1",  # https://docs.astral.sh/ruff/rules/#pydocstyle-d
+]
+select = [
+  # pyflakes
+  "F",
+  # pycodestyle
+  "E",
+  "W",
+  # isort
+  "I",
+  # pep8-naming
+  "N",
+  # pyupgrade
+  "UP",
+  # pydocstyle
+  "D",
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.tombi]
+schema.enabled = false
 
 [tool.pytest.ini_options]
 addopts = "--import-mode=importlib --cov=sqlcompyre --cov-report term-missing --color=yes"
