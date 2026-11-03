@@ -1,8 +1,7 @@
-# Copyright (c) QuantCo 2024-2025
+# Copyright (c) QuantCo 2024-2026
 # SPDX-License-Identifier: BSD-3-Clause
 
-"""This file contains tests that verify basic behavior for determining column name
-matches."""
+"""This file contains tests that verify basic behavior for determining column name matches."""
 
 import sqlalchemy as sa
 

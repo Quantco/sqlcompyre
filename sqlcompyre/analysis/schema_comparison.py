@@ -1,4 +1,4 @@
-# Copyright (c) QuantCo 2024-2025
+# Copyright (c) QuantCo 2024-2026
 # SPDX-License-Identifier: BSD-3-Clause
 
 import logging
@@ -35,7 +35,8 @@ class SchemaComparison:
         collation: str | None,
         ignore_casing: bool,
     ):
-        """
+        """Initialize the instance.
+
         Args:
             engine: The engine to use for connecting to the database.
             left_schema: The name of the "left" schema. Purely informational.
@@ -88,8 +89,7 @@ class SchemaComparison:
         column_name_mapping: dict[str, str] | None = None,
         infer_primary_keys: bool = False,
     ) -> TableComparison:
-        """A full comparison between the tables in "left" and "right" schema with the
-        specified name. The name must be available in ``table_names.in_common``.
+        """A full comparison between the tables in "left" and "right" schema with the specified name. The name must be available in ``table_names.in_common``.
 
         Args:
             name: The name of the table (possibly including a schema name if this schema comparison

@@ -1,4 +1,4 @@
-# Copyright (c) QuantCo 2024-2025
+# Copyright (c) QuantCo 2024-2026
 # SPDX-License-Identifier: BSD-3-Clause
 
 import math
@@ -18,7 +18,8 @@ class TerminalFormatter(Formatter):
     """Formatter for printing reports to the terminal."""
 
     def __init__(self, colored: bool = True):
-        """
+        """Initialize the instance.
+
         Args:
             colored: Whether the report should be colored.
         """

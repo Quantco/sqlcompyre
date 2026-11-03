@@ -1,4 +1,4 @@
-# Copyright (c) QuantCo 2024-2024
+# Copyright (c) QuantCo 2024-2026
 # SPDX-License-Identifier: BSD-3-Clause
 
 from abc import ABC, abstractmethod
@@ -11,7 +11,8 @@ class Writer(ABC):
     """Abstract base class for writers of reports."""
 
     def __init__(self, formatter: Formatter):
-        """
+        """Initialize the instance.
+
         Args:
             formatter: The formatter to use for rendering reports.
         """

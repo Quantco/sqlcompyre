@@ -1,4 +1,4 @@
-# Copyright (c) QuantCo 2024-2024
+# Copyright (c) QuantCo 2024-2026
 # SPDX-License-Identifier: BSD-3-Clause
 
 from abc import ABC, abstractmethod
@@ -15,8 +15,7 @@ class Formatter(ABC):
     @property
     @abstractmethod
     def file_extension(self) -> str:
-        """The file extension to use when this formatter's output is written to a
-        file."""
+        """The file extension to use when this formatter's output is written to a file."""
 
     @abstractmethod
     def format(

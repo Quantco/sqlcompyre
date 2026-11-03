@@ -1,4 +1,4 @@
-# Copyright (c) QuantCo 2024-2024
+# Copyright (c) QuantCo 2024-2026
 # SPDX-License-Identifier: BSD-3-Clause
 
 from functools import cached_property
@@ -14,7 +14,8 @@ class Names:
         name_mapping: dict[str, str] | None,
         ignore_casing: bool,
     ):
-        """
+        """Initialize the instance.
+
         Args:
             left: Names from the "left" database object.
             right: Names from the "right" database object.

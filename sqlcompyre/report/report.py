@@ -1,4 +1,4 @@
-# Copyright (c) QuantCo 2024-2024
+# Copyright (c) QuantCo 2024-2026
 # SPDX-License-Identifier: BSD-3-Clause
 
 from typing import Any, Literal
@@ -18,7 +18,8 @@ class Report:
         description: str | None,
         sections: dict[str, Any],
     ):
-        """
+        """Initialize the instance.
+
         Args:
             object_type: The type of object that the report summarizes the comparison for.
             object_1: The name of the first object from the comparison.

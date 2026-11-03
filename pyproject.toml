@@ -1,11 +1,7 @@
-[build-system]
-requires = ["setuptools", "setuptools-scm", "wheel"]
-
-[tool.setuptools_scm]
-version_scheme = "post-release"
-
 [project]
 authors = [{ name = "Oliver Borchert", email = "oliver.borchert@quantco.com" }]
+# replaced in CI
+version = "0.0.0"
 classifiers = [
   "Programming Language :: Python :: 3",
   "Programming Language :: Python :: 3.11",
@@ -21,7 +17,6 @@ dependencies = [
   "tqdm",
 ]
 description = "Tool for comparing and inspecting data in SQL databases."
-dynamic = ["version"]
 name = "sqlcompyre"
 readme = "README.md"
 requires-python = ">=3.11"
@@ -29,15 +24,11 @@ requires-python = ">=3.11"
 [project.urls]
 repository = "https://github.com/quantco/sqlcompyre"
 
-[tool.setuptools.packages.find]
-include = ["sqlcompyre"]
-namespaces = false
-
 [project.scripts]
 compyre = "sqlcompyre.cli.__main__:main"
 
-[tool.docformatter]
-black = true
+["sqlcompyre"]
+namespaces = false
 
 [tool.black]
 exclude = '''
@@ -55,9 +46,10 @@ line-length = 88
 
 [tool.ruff.lint]
 ignore = [
-  "E501", # https://docs.astral.sh/ruff/faq/#is-the-ruff-linter-compatible-with-black
-  "N803", # https://docs.astral.sh/ruff/rules/invalid-argument-name
-  "N806", # https://docs.astral.sh/ruff/rules/non-lowercase-variable-in-function
+  "N803",  # https://docs.astral.sh/ruff/rules/invalid-argument-name
+  "N806",  # https://docs.astral.sh/ruff/rules/non-lowercase-variable-in-function
+  "E501",  # https://docs.astral.sh/ruff/faq/#is-the-ruff-linter-compatible-with-black
+  "D1",  # https://docs.astral.sh/ruff/rules/#pydocstyle-d
 ]
 select = [
   # pyflakes
@@ -71,14 +63,19 @@ select = [
   "N",
   # pyupgrade
   "UP",
+  # pydocstyle
+  "D",
 ]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
 
 [tool.mypy]
 check_untyped_defs = true
 exclude = ["docs/"]
 ignore_missing_imports = true
 no_implicit_optional = true
-python_version = '3.11'
+python_version = "3.11"
 
 # If you run into `missing library stubs or py.typed marker` errors
 # and no stubs are available for this library, you can add an override
@@ -87,6 +84,9 @@ python_version = '3.11'
 # module = ["my_module"]
 # ignore_missing_imports = true
 
+[tool.tombi]
+schema.enabled = false
+
 [tool.pytest.ini_options]
 addopts = "--import-mode=importlib --cov=sqlcompyre --cov-report term-missing --color=yes"
 filterwarnings = [
@@ -94,3 +94,7 @@ filterwarnings = [
 ]
 markers = ["skip_dialect(dialect): skip this test for a certain dialect"]
 testpaths = ["tests"]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"

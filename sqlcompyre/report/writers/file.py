@@ -1,4 +1,4 @@
-# Copyright (c) QuantCo 2024-2024
+# Copyright (c) QuantCo 2024-2026
 # SPDX-License-Identifier: BSD-3-Clause
 
 import logging
@@ -21,7 +21,8 @@ class FileWriter(Writer):
     """
 
     def __init__(self, formatter: Formatter):
-        """
+        """Initialize the instance.
+
         Args:
             formatter: The formatter to use for rendering reports.
         """

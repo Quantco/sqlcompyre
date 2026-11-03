@@ -1,4 +1,4 @@
-# Copyright (c) QuantCo 2024-2025
+# Copyright (c) QuantCo 2024-2026
 # SPDX-License-Identifier: BSD-3-Clause
 
 import functools
@@ -32,7 +32,8 @@ class TableComparison:
         ignore_casing: bool,
         infer_primary_keys: bool,
     ):
-        """
+        """Initialize the instance.
+
         Args:
             engine: The engine to use for connecting to the database.
             left_table: The "left" table of the comparison.
@@ -158,8 +159,7 @@ class TableComparison:
 
     @cached_property
     def row_matches(self) -> RowMatches:
-        """A comparison between the contents of the individual rows in the two
-        tables."""
+        """A comparison between the contents of the individual rows in the two tables."""
         # Get conditions for (non-)equal columns
         equality_conditions = [
             self._is_equal(colname_1, colname_2)
@@ -434,8 +434,7 @@ class TableComparison:
         return right_table.outerjoin(left_table, sa.and_(*self._join_conditions))
 
     def _get_aggregate_changes(self, left_col_name: str) -> sa.Select:
-        """Counts the number of different ways each column changes from one table to
-        another.
+        """Counts the number of different ways each column changes from one table to another.
 
         Args:
             left_col_name: The column name in the left table.

@@ -1,8 +1,7 @@
-# Copyright (c) QuantCo 2024-2025
+# Copyright (c) QuantCo 2024-2026
 # SPDX-License-Identifier: BSD-3-Clause
 
-"""This file contains tests that verify the column matching ability of table
-comparisons."""
+"""This file contains tests that verify the column matching ability of table comparisons."""
 
 import pandas as pd
 import pytest

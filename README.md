@@ -51,7 +51,7 @@ git clone https://github.com/quantco/sqlcompyre
 cd sqlcompyre
 
 pixi run pre-commit-install
-pixi run postinstall
+pixi run test
 ```
 
 ### Running Tests Locally
